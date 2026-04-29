@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ObligAI — Regulatory Obligation Management</title>
+  <meta name="description" content="ObligAI is a regulatory obligation management platform that helps financial institutions identify, structure and monitor their regulatory requirements across multiple jurisdictions.">
+  <meta property="og:title" content="ObligAI">
+  <meta property="og:description" content="Regulatory obligation management for financial institutions.">
+  <meta property="og:url" content="https://oblig.ai">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ── Brand tokens ── */
+    :root {
+      --sienna:        #B85C3A;
+      --sienna-300:    #D48870;
+      --sienna-100:    #F0D4C8;
+      --page-bg:       #FAF7F4;
+      --surface:       #FFFFFF;
+      --text-primary:  #0F0F0F;
+      --text-secondary:#5A5248;
+      --text-muted:    #8A7E75;
+      --border:        #EAD8CD;
+      --sans:          'Inter', -apple-system, sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { font-size: 16px; -webkit-font-smoothing: antialiased; }
+
+    body {
+      background: var(--page-bg);
+      color: var(--text-primary);
+      font-family: var(--sans);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Layout ── */
+    .container {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 40px;
+      width: 100%;
+    }
+
+    /* ── Nav ── */
+    nav {
+      padding: 32px 0 0;
+    }
+
+    .wordmark {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .wordmark-text {
+      font-family: var(--sans);
+      font-weight: 700;
+      font-size: 22px;
+      letter-spacing: -0.3px;
+      color: var(--text-primary);
+      line-height: 1;
+    }
+
+    .wordmark-text em {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-style: italic;
+      color: var(--sienna);
+      font-weight: 700;
+    }
+
+    .mark svg {
+      display: block;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 96px 0 80px;
+    }
+
+    .eyebrow {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 4px;
+      color: var(--sienna);
+      text-transform: uppercase;
+      margin-bottom: 32px;
+    }
+
+    .hero-title {
+      font-size: clamp(32px, 5vw, 52px);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.5px;
+      color: var(--text-primary);
+      max-width: 680px;
+      margin-bottom: 32px;
+    }
+
+    .hero-title span {
+      color: var(--sienna);
+    }
+
+    .hero-body {
+      font-size: 18px;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      max-width: 560px;
+      margin-bottom: 48px;
+    }
+
+    /* ── Section headers ── */
+    .section-header {
+      margin-bottom: 24px;
+    }
+
+    .section-header .eyebrow {
+      margin-bottom: 8px;
+    }
+
+    .section-title {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      color: var(--text-primary);
+      line-height: 1.2;
+    }
+
+    /* ── Cards ── */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 64px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      padding: 28px;
+    }
+
+    .card-label {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      color: var(--sienna);
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    .card-body {
+      font-size: 13px;
+      line-height: 1.65;
+      color: var(--text-secondary);
+    }
+
+    /* ── Layers visualization ── */
+    .layers {
+      margin-bottom: 64px;
+    }
+
+    .layers-inner {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .layer {
+      position: relative;
+      background: var(--surface);
+      padding: 24px 20px 20px;
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      animation: fadeUp 0.4s ease calc(var(--i) * 0.07s + 0.1s) both;
+    }
+
+    .layer:last-child {
+      border-right: none;
+    }
+
+    .layer--accent {
+      background: #FAF0EB;
+    }
+
+    .layer--terminal {
+      background: var(--page-bg);
+    }
+
+    .layer-number {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      color: var(--sienna);
+    }
+
+    .layer-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.3;
+      margin-bottom: 6px;
+    }
+
+    .layer-desc {
+      font-size: 11px;
+      line-height: 1.6;
+      color: var(--text-secondary);
+    }
+
+    .layer-arrow {
+      margin-top: auto;
+      font-size: 14px;
+      color: var(--sienna);
+      opacity: 0.4;
+      text-align: right;
+    }
+
+    /* connector bar at top */
+    .layer::before {
+      content: '';
+      display: block;
+      height: 3px;
+      background: var(--border);
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+    }
+
+    .layer--accent::before {
+      background: var(--sienna);
+      opacity: 0.5;
+    }
+
+    .layer--terminal::before {
+      background: var(--sienna);
+      opacity: 0.25;
+    }
+
+    /* ── Mobile layers ── */
+    @media (max-width: 900px) {
+      .layers-inner {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      .layer:nth-child(3) { border-right: none; }
+      .layer:nth-child(3), .layer:nth-child(4), .layer:nth-child(5), .layer:nth-child(6) {
+        border-top: 1px solid var(--border);
+      }
+    }
+
+    @media (max-width: 560px) {
+      .layers-inner {
+        grid-template-columns: 1fr 1fr;
+      }
+      .layer:nth-child(odd) { border-right: 1px solid var(--border); }
+      .layer:nth-child(even) { border-right: none; }
+      .layer:not(:nth-child(1)):not(:nth-child(2)) {
+        border-top: 1px solid var(--border);
+      }
+    }
+
+    /* ── CTA ── */
+    .cta-row {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .cta-primary {
+      display: inline-block;
+      padding: 13px 28px;
+      background: var(--sienna);
+      color: #fff;
+      font-family: var(--sans);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      text-decoration: none;
+      border-radius: 0;
+      transition: background 0.15s, transform 0.1s;
+    }
+
+    .cta-primary:hover {
+      background: #9A4830;
+      transform: translateY(-1px);
+    }
+
+    .cta-secondary {
+      font-size: 13px;
+      color: var(--text-muted);
+      text-decoration: none;
+    }
+
+    .cta-secondary:hover {
+      color: var(--text-primary);
+    }
+
+    /* ── Divider accent ── */
+    .accent-line {
+      width: 40px;
+      height: 2px;
+      background: var(--sienna);
+      margin-bottom: 48px;
+    }
+
+    /* ── Footer ── */
+    footer {
+      padding: 32px 0 40px;
+      border-top: 1px solid var(--border);
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .footer-copy {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 24px;
+    }
+
+    .footer-links a {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-decoration: none;
+    }
+
+    .footer-links a:hover {
+      color: var(--text-primary);
+    }
+
+    /* ── Fade in ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero { animation: fadeUp 0.5s ease both; }
+    .cards { animation: fadeUp 0.5s ease 0.1s both; }
+    .cta-row { animation: fadeUp 0.5s ease 0.2s both; }
+
+    /* ── Mobile ── */
+    @media (max-width: 680px) {
+      .container { padding: 0 24px; }
+      .hero { padding: 64px 0 48px; }
+      .cards { grid-template-columns: 1fr; }
+      .hero-body { font-size: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <nav>
+      <a href="/" class="wordmark">
+        <span class="mark">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 120" width="48" height="29" aria-label="ObligAI mark">
+            <polygon points="20,92 100,28 156,92" fill="#B85C3A" fill-opacity="0.10" stroke="none"/>
+            <line x1="60" y1="92" x2="120" y2="52" stroke="#B85C3A" stroke-width="3" stroke-linecap="square" stroke-opacity="0.42"/>
+            <line x1="120" y1="52" x2="180" y2="92" stroke="#B85C3A" stroke-width="3" stroke-linecap="square" stroke-opacity="0.42"/>
+            <line x1="20" y1="92" x2="100" y2="28" stroke="#B85C3A" stroke-width="3" stroke-linecap="square"/>
+            <line x1="100" y1="28" x2="156" y2="92" stroke="#B85C3A" stroke-width="3" stroke-linecap="square"/>
+            <line x1="14" y1="100" x2="186" y2="100" stroke="#B85C3A" stroke-width="1.25"/>
+          </svg>
+        </span>
+        <span class="wordmark-text">Obliga<em>I</em></span>
+      </a>
+    </nav>
+
+    <section class="hero">
+      <p class="eyebrow">Regulatory Intelligence</p>
+
+      <h1 class="hero-title">
+        Identifying regulatory requirements.<br>
+        Mapping them into <span>obligation registers.</span>
+      </h1>
+
+      <div class="accent-line"></div>
+
+      <p class="hero-body">
+        ObligAI is a regulatory obligation management platform for financial institutions operating across multiple jurisdictions. It translates regulatory texts into structured obligations and maps them to the procedures that satisfy them — making the regulatory perimeter of an institution visible, auditable, and maintainable.
+      </p>
+
+      <div class="section-header">
+        <p class="eyebrow">Overview</p>
+        <h2 class="section-title">What ObligAI does.</h2>
+      </div>
+
+      <div class="cards">
+        <div class="card">
+          <p class="card-label">The Challenge</p>
+          <p class="card-body">Financial institutions operating across jurisdictions carry hundreds of regulatory obligations. Most are managed in spreadsheets. Few are connected to the procedures that satisfy them. Fewer still are monitored for conflicts between regulators.</p>
+        </div>
+        <div class="card">
+          <p class="card-label">The Platform</p>
+          <p class="card-body">Six layers from regulatory source to compliance workbench. Each obligation has a WHAT — the legal requirement, read-only — and a HOW — the institution's documented procedure for satisfying it. Coverage is the percentage of obligations with a documented HOW.</p>
+        </div>
+        <div class="card">
+          <p class="card-label">The Architecture</p>
+          <p class="card-body">Conflict detection is a structural property of the knowledge graph. When two regulations give incompatible instructions on the same data activity, the graph surfaces it as a conflict node — not as a keyword match, not as a manual review flag.</p>
+        </div>
+      </div>
+
+      <div class="section-header">
+        <p class="eyebrow">Platform Architecture</p>
+        <h2 class="section-title">Six layers from regulator to workbench.</h2>
+      </div>
+
+      <div class="layers">
+        <div class="layers-inner">
+          <div class="layer" style="--i:0">
+            <div class="layer-number">01</div>
+            <div class="layer-content">
+              <div class="layer-name">Client Profile</div>
+              <div class="layer-desc">Legal entity, business lines, international footprint, risk profile. Determines which regulators apply.</div>
+            </div>
+            <div class="layer-arrow">↓</div>
+          </div>
+          <div class="layer" style="--i:1">
+            <div class="layer-number">02</div>
+            <div class="layer-content">
+              <div class="layer-name">Regulatory Sources</div>
+              <div class="layer-desc">Supervisory authorities with jurisdiction over the institution. Monitored continuously.</div>
+            </div>
+            <div class="layer-arrow">↓</div>
+          </div>
+          <div class="layer" style="--i:2">
+            <div class="layer-number">03</div>
+            <div class="layer-content">
+              <div class="layer-name">Regulatory Library</div>
+              <div class="layer-desc">Centralised store of regulatory texts. Scraped, parsed, indexed. The source of record.</div>
+            </div>
+            <div class="layer-arrow">↓</div>
+          </div>
+          <div class="layer" style="--i:3">
+            <div class="layer-number">04</div>
+            <div class="layer-content">
+              <div class="layer-name">Knowledge Graph</div>
+              <div class="layer-desc">Ontological mapping of regulators, regulations, obligations and conflicts. Structural conflict detection.</div>
+            </div>
+            <div class="layer-arrow">↓</div>
+          </div>
+          <div class="layer layer--accent" style="--i:4">
+            <div class="layer-number">05</div>
+            <div class="layer-content">
+              <div class="layer-name">Obligation Register</div>
+              <div class="layer-desc">Each obligation: a WHAT (the legal requirement, read-only) and a HOW (the institution's documented procedure). Coverage = percentage of obligations with a documented HOW.</div>
+            </div>
+            <div class="layer-arrow">↓</div>
+          </div>
+          <div class="layer layer--terminal" style="--i:5">
+            <div class="layer-number">06</div>
+            <div class="layer-content">
+              <div class="layer-name">Compliance Workbench</div>
+              <div class="layer-desc">The analyst interface. Obligation detail, evidence locker, action panel, audit trail. Every action logged with timestamp and actor.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cta-row">
+        <a href="mailto:info@oblig.ai" class="cta-primary">Get in touch</a>
+        <a href="mailto:founders@oblig.ai" class="cta-secondary">For investors — founders@oblig.ai</a>
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <p class="footer-copy">© 2026 ObligAI Inc. Delaware, United States.</p>
+        <div class="footer-links">
+          <a href="mailto:info@oblig.ai">info@oblig.ai</a>
+          <a href="mailto:dmikdad@oblig.ai">dmikdad@oblig.ai</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
