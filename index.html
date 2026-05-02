@@ -54,9 +54,10 @@
 
     .wordmark {
       display: flex;
+      flex-direction: column;
       align-items: center;
-      gap: 12px;
       text-decoration: none;
+      gap: 8px;
     }
 
     .wordmark-text {
@@ -77,9 +78,6 @@
       font-weight: 700;
     }
 
-    .mark svg {
-      display: block;
-    }
 
     /* ── Hero ── */
     .hero {
@@ -381,16 +379,30 @@
   <div class="container">
     <nav>
       <a href="/" class="wordmark">
-        <span class="mark">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 120" width="48" height="29" aria-label="Oblig.ai mark">
-            <polygon points="20,92 100,28 156,92" fill="#B85C3A" fill-opacity="0.10" stroke="none"/>
-            <line x1="60" y1="92" x2="120" y2="52" stroke="#B85C3A" stroke-width="3" stroke-linecap="square" stroke-opacity="0.42"/>
-            <line x1="120" y1="52" x2="180" y2="92" stroke="#B85C3A" stroke-width="3" stroke-linecap="square" stroke-opacity="0.42"/>
-            <line x1="20" y1="92" x2="100" y2="28" stroke="#B85C3A" stroke-width="3" stroke-linecap="square"/>
-            <line x1="100" y1="28" x2="156" y2="92" stroke="#B85C3A" stroke-width="3" stroke-linecap="square"/>
-            <line x1="14" y1="100" x2="186" y2="100" stroke="#B85C3A" stroke-width="1.25"/>
-          </svg>
-        </span>
+        <svg xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 160 124"
+          width="48" height="37">
+          <line x1="80" y1="46" x2="80" y2="34"
+            stroke="#B85C3A" stroke-width="3"
+            stroke-linecap="round"/>
+          <line x1="89" y1="61" x2="99" y2="67"
+            stroke="#B85C3A" stroke-width="3"
+            stroke-linecap="round"/>
+          <line x1="71" y1="61" x2="61" y2="67"
+            stroke="#B85C3A" stroke-width="3"
+            stroke-linecap="round"/>
+          <circle cx="80" cy="56" r="10"
+            fill="#B85C3A"/>
+          <circle cx="80" cy="28" r="6"
+            fill="none" stroke="#B85C3A"
+            stroke-width="3"/>
+          <circle cx="104" cy="70" r="6"
+            fill="none" stroke="#B85C3A"
+            stroke-width="3"/>
+          <circle cx="56" cy="70" r="6"
+            fill="none" stroke="#B85C3A"
+            stroke-width="3"/>
+        </svg>
         <span class="wordmark-text">Obliga<em>I</em></span>
       </a>
     </nav>
