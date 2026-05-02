@@ -5,11 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Oblig.ai — Regulatory Obligation Management</title>
   <meta name="description" content="Oblig.ai is a regulatory obligation management platform that helps financial institutions identify, structure and monitor their regulatory requirements across multiple jurisdictions.">
+  <meta property="og:type" content="website">
   <meta property="og:title" content="Oblig.ai">
   <meta property="og:description" content="Regulatory obligation management for financial institutions.">
   <meta property="og:url" content="https://oblig.ai">
   <meta property="og:image" content="https://oblig.ai/og.png">
+  <meta name="theme-color" content="#FAF7F4">
   <link rel="canonical" href="https://oblig.ai">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
@@ -18,6 +21,7 @@
     :root {
       --sienna:        #B85C3A;
       --sienna-100:    #F0D4C8;
+      --sienna-shadow: rgba(184, 92, 58, 0.28);
       --page-bg:       #FAF7F4;
       --surface:       #FFFFFF;
       --text-primary:  #0F0F0F;
@@ -29,7 +33,7 @@
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    html { font-size: 16px; -webkit-font-smoothing: antialiased; }
+    html { -webkit-font-smoothing: antialiased; }
 
     body {
       background: var(--page-bg);
@@ -153,7 +157,7 @@
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 2px;
-      padding: 28px;
+      padding: 24px;
     }
 
     .card-label {
@@ -192,7 +196,7 @@
       border-right: 1px solid var(--border);
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 16px;
       animation: fadeUp 0.4s ease calc(var(--i) * 0.07s + 0.1s) both;
     }
 
@@ -265,7 +269,7 @@
         grid-template-columns: repeat(3, 1fr);
       }
       .layer:nth-child(3) { border-right: none; }
-      .layer:nth-child(3), .layer:nth-child(4), .layer:nth-child(5), .layer:nth-child(6) {
+      .layer:nth-child(4), .layer:nth-child(5), .layer:nth-child(6) {
         border-top: 1px solid var(--border);
       }
     }
@@ -294,7 +298,7 @@
       padding: 13px 28px;
       background: transparent;
       color: var(--sienna);
-      border: 1.5px solid var(--sienna);
+      border: 1px solid var(--sienna);
       font-family: var(--sans);
       font-size: 13px;
       font-weight: 600;
@@ -309,9 +313,9 @@
 
     .cta-primary:hover {
       background: var(--sienna);
-      color: #FFFFFF;
+      color: var(--surface);
       transform: translateY(-1px);
-      box-shadow: 0 2px 12px rgba(184, 92, 58, 0.28);
+      box-shadow: 0 2px 12px var(--sienna-shadow);
     }
 
     .cta-secondary {
@@ -322,6 +326,15 @@
 
     .cta-secondary:hover {
       color: var(--text-primary);
+    }
+
+    /* ── Focus ── */
+    .wordmark:focus-visible,
+    .cta-primary:focus-visible,
+    .cta-secondary:focus-visible,
+    .footer-links a:focus-visible {
+      outline: 2px solid var(--sienna);
+      outline-offset: 3px;
     }
 
     /* ── Divider accent ── */
@@ -376,6 +389,14 @@
     .cards { animation: fadeUp 0.5s ease 0.1s both; }
     .cta-row { animation: fadeUp 0.5s ease 0.2s both; }
 
+    /* ── Reduced motion ── */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
     /* ── Mobile ── */
     @media (max-width: 680px) {
       .container { padding: 0 24px; }
@@ -390,7 +411,7 @@
 <body>
 
   <div class="container">
-    <nav>
+    <nav aria-label="Main">
       <a href="/" class="wordmark">
         <svg xmlns="http://www.w3.org/2000/svg"
           viewBox="42 14 76 70"
@@ -410,6 +431,7 @@
       </a>
     </nav>
 
+    <main>
     <section class="hero">
       <p class="eyebrow">Regulatory Intelligence</p>
 
@@ -506,6 +528,7 @@
         <a href="mailto:founders@oblig.ai" class="cta-secondary">For investors — founders@oblig.ai</a>
       </div>
     </section>
+    </main>
   </div>
 
   <footer>
