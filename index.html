@@ -8,6 +8,8 @@
   <meta property="og:title" content="Oblig.ai">
   <meta property="og:description" content="Regulatory obligation management for financial institutions.">
   <meta property="og:url" content="https://oblig.ai">
+  <meta property="og:image" content="https://oblig.ai/og.png">
+  <link rel="canonical" href="https://oblig.ai">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
@@ -15,7 +17,6 @@
     /* ── Brand tokens ── */
     :root {
       --sienna:        #B85C3A;
-      --sienna-300:    #D48870;
       --sienna-100:    #F0D4C8;
       --page-bg:       #FAF7F4;
       --surface:       #FFFFFF;
@@ -77,6 +78,10 @@
       color: var(--sienna);
       font-weight: 700;
     }
+
+    .wordmark svg line { stroke: var(--sienna); }
+    .wordmark svg circle { stroke: var(--sienna); fill: none; }
+    .wordmark svg circle:first-of-type { fill: var(--sienna); stroke: none; }
 
 
     /* ── Hero ── */
@@ -391,25 +396,15 @@
           viewBox="42 14 76 70"
           width="64" height="59">
           <line x1="80" y1="46" x2="80" y2="34"
-            stroke="#B85C3A" stroke-width="3"
-            stroke-linecap="round"/>
+            stroke-width="3" stroke-linecap="round"/>
           <line x1="89" y1="61" x2="99" y2="67"
-            stroke="#B85C3A" stroke-width="3"
-            stroke-linecap="round"/>
+            stroke-width="3" stroke-linecap="round"/>
           <line x1="71" y1="61" x2="61" y2="67"
-            stroke="#B85C3A" stroke-width="3"
-            stroke-linecap="round"/>
-          <circle cx="80" cy="56" r="10"
-            fill="#B85C3A"/>
-          <circle cx="80" cy="28" r="6"
-            fill="none" stroke="#B85C3A"
-            stroke-width="3"/>
-          <circle cx="104" cy="70" r="6"
-            fill="none" stroke="#B85C3A"
-            stroke-width="3"/>
-          <circle cx="56" cy="70" r="6"
-            fill="none" stroke="#B85C3A"
-            stroke-width="3"/>
+            stroke-width="3" stroke-linecap="round"/>
+          <circle cx="80" cy="56" r="10"/>
+          <circle cx="80" cy="28" r="6" stroke-width="3"/>
+          <circle cx="104" cy="70" r="6" stroke-width="3"/>
+          <circle cx="56" cy="70" r="6" stroke-width="3"/>
         </svg>
         <span class="wordmark-text">Obliga<em>I</em></span>
       </a>
