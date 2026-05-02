@@ -1,0 +1,823 @@
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ObligaI — Regulatory Intelligence</title>
+    <meta
+      name="description"
+      content="ObligaI maps the regulatory perimeter of a bank into a structured obligation register and prefilled compliance workbench."
+    />
+    <meta property="og:title" content="ObligaI — Regulatory Intelligence" />
+    <meta property="og:description" content="ObligaI maps the regulatory perimeter of a bank into a structured obligation register and prefilled compliance workbench." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://oblig.ai" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&amp;family=JetBrains+Mono:wght@400&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='42 14 76 70'><line x1='80' y1='46' x2='80' y2='34' stroke='%23B85C3A' stroke-width='3' stroke-linecap='round'/><line x1='89' y1='61' x2='99' y2='67' stroke='%23B85C3A' stroke-width='3' stroke-linecap='round'/><line x1='71' y1='61' x2='61' y2='67' stroke='%23B85C3A' stroke-width='3' stroke-linecap='round'/><circle cx='80' cy='56' r='10' fill='%23B85C3A'/><circle cx='80' cy='28' r='6' fill='none' stroke='%23B85C3A' stroke-width='3'/><circle cx='104' cy='70' r='6' fill='none' stroke='%23B85C3A' stroke-width='3'/><circle cx='56' cy='70' r='6' fill='none' stroke='%23B85C3A' stroke-width='3'/></svg>"
+    />
+    <style>
+      /* ─── Reset ─── */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      /* ─── Tokens ─── */
+      :root {
+        --page-bg: #faf7f4;
+        --surface: #ffffff;
+        --surface-high: #f5f0eb;
+        --text-primary: #0f0f0f;
+        --text-secondary: #5a5248;
+        --text-muted: #8a7e75;
+        --text-inverse: #f8f8f8;
+        --accent: #b85c3a;
+        --accent-active: #9a4830;
+        --accent-faint: rgba(184, 92, 58, 0.08);
+        --accent-border: rgba(184, 92, 58, 0.28);
+        --border: rgba(184, 92, 58, 0.12);
+        --border-hover: rgba(184, 92, 58, 0.28);
+        --divider: rgba(184, 92, 58, 0.1);
+        --focus-ring: #b85c3a;
+        --card-bg: rgba(255, 255, 255, 0.45);
+        --card-bg-solid: #ffffff;
+        --pend-color: #c9a84c;
+        --pend-bg: rgba(201, 168, 76, 0.1);
+        --pend-border: rgba(201, 168, 76, 0.3);
+        --font: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+        --mono: "JetBrains Mono", "SF Mono", Menlo, monospace;
+        --serif: Georgia, "Times New Roman", serif;
+        --r: 2px;
+        /* Layout spine — everything shares this left edge */
+        --pad: 48px;
+        --max: 1200px;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --page-bg: #080808;
+          --surface: #111111;
+          --surface-high: #161616;
+          --text-primary: #f8f8f8;
+          --text-secondary: #c8c0b8;
+          --text-muted: #8a7e75;
+          --text-inverse: #0f0f0f;
+          --accent-faint: rgba(184, 92, 58, 0.12);
+          --accent-border: rgba(184, 92, 58, 0.35);
+          --border: rgba(248, 248, 248, 0.08);
+          --border-hover: rgba(248, 248, 248, 0.24);
+          --divider: rgba(248, 248, 248, 0.08);
+          --card-bg: rgba(17, 17, 17, 0.45);
+          --card-bg-solid: #111111;
+        }
+      }
+      [data-theme="dark"] {
+        --page-bg: #080808;
+        --surface: #111111;
+        --surface-high: #161616;
+        --text-primary: #f8f8f8;
+        --text-secondary: #c8c0b8;
+        --text-muted: #8a7e75;
+        --text-inverse: #0f0f0f;
+        --accent-faint: rgba(184, 92, 58, 0.12);
+        --accent-border: rgba(184, 92, 58, 0.35);
+        --border: rgba(248, 248, 248, 0.08);
+        --border-hover: rgba(248, 248, 248, 0.24);
+        --divider: rgba(248, 248, 248, 0.08);
+        --card-bg: rgba(17, 17, 17, 0.45);
+        --card-bg-solid: #111111;
+      }
+
+      /* ─── Base ─── */
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        background: var(--page-bg);
+        color: var(--text-primary);
+        font-family: var(--font);
+        font-size: 14px;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      /* ─── Wordmark in body text ─── */
+      .wm {
+        font-weight: 500;
+        white-space: nowrap;
+      }
+      .wm em,
+      nav .lk-wm em,
+      .lk-wm em {
+        font-family: var(--serif);
+        font-style: italic;
+        color: var(--accent);
+        margin-left: -0.04em;
+      }
+
+      /* ─── Spine — all content shares this left edge ─── */
+      /* The spine is max-width container with var(--pad) on both sides.
+     Left edge of content = (viewport - max) / 2 + pad, but on
+     screens narrower than max, it is simply var(--pad) from left.
+     This means nav logo, hero text, section headings, layer numbers
+     all share the same left baseline. */
+      .spine {
+        max-width: var(--max);
+        margin: 0 auto;
+        padding: 0 var(--pad);
+      }
+
+      /* ─── Navigation
+       Logo (stacked lockup) LEFT · primary button RIGHT
+       Spec: Inter Bold 13px ghost links · primary button right ─── */
+      nav {
+        padding: 16px var(--pad);
+        border-bottom: 1px solid var(--divider);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        max-width: 100%;
+        background: var(--page-bg);
+      }
+
+      /* Stacked lockup: flex-direction COLUMN — mark above wordmark */
+      .lk {
+        display: inline-flex;
+        flex-direction: column; /* mark above wordmark — never horizontal */
+        align-items: flex-start;
+        gap: 8px;
+        text-decoration: none;
+      }
+      .lk svg {
+        display: block;
+      }
+      .lk-wm {
+        font: 500 13px/1 var(--font);
+        letter-spacing: -0.01em;
+        color: var(--text-primary);
+      }
+
+      /* ─── Buttons
+       Rest: transparent · 1px accent border · accent text
+       Hover: solid accent · inverse text · lift 1px · glow ─── */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font: 700 11px/1 var(--font);
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        text-decoration: none;
+        padding: 8px 24px;
+        min-height: 40px;
+        border-radius: 0;
+        border: 1px solid var(--accent);
+        color: var(--accent);
+        background: transparent;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: all 150ms ease-out;
+      }
+      .btn:hover {
+        background: var(--accent);
+        color: var(--text-inverse);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(184, 92, 58, 0.35);
+      }
+      .btn:active {
+        background: var(--accent-active);
+        color: var(--text-inverse);
+        transform: translateY(0);
+        box-shadow: none;
+      }
+      .btn:focus-visible {
+        outline: 2px solid var(--focus-ring);
+        outline-offset: 2px;
+      }
+      /* Ghost — no border, secondary text at rest */
+      .btn-ghost {
+        border-color: transparent;
+        color: var(--text-secondary);
+      }
+      .btn-ghost:hover {
+        border-color: var(--accent);
+        background: var(--accent);
+        color: var(--text-inverse);
+      }
+
+      /* ─── Hero
+       Text LEFT · screenshot RIGHT
+       Spec: Display 48px · body 16px · CTA button · left-aligned ─── */
+      .hero {
+        max-width: var(--max);
+        margin: 0 auto;
+        padding: 88px var(--pad) 80px;
+        display: grid;
+        grid-template-columns: 1fr 1.4fr;
+        gap: 64px;
+        align-items: center;
+      }
+      .hero-text {
+      }
+
+      /* Screenshot container */
+      .hero-visual {
+        border-radius: var(--r);
+        overflow: hidden;
+        border: 1px solid var(--border);
+        box-shadow:
+          0 2px 8px rgba(0, 0, 0, 0.06),
+          0 16px 48px rgba(0, 0, 0, 0.1),
+          0 0 0 1px rgba(184, 92, 58, 0.08);
+        /* Subtle clockwise tilt for visual energy */
+        transform: perspective(1200px) rotateY(-4deg) rotateX(2deg);
+        transition:
+          transform 400ms ease-out,
+          box-shadow 400ms ease-out;
+      }
+      .hero-visual:hover {
+        transform: perspective(1200px) rotateY(-1deg) rotateX(0deg);
+        box-shadow:
+          0 4px 16px rgba(0, 0, 0, 0.08),
+          0 32px 72px rgba(0, 0, 0, 0.14),
+          0 0 0 1px rgba(184, 92, 58, 0.12);
+      }
+      .hero-img {
+        display: block;
+        width: 100%;
+        /* Crop bottom ~15% — removes account/name row from prototype */
+        height: 420px;
+        object-fit: cover;
+        object-position: top left;
+      }
+
+      .eyebrow {
+        font: 700 10px/1 var(--font);
+        letter-spacing: 2.5px;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin-bottom: 16px;
+      }
+      /* Display: 36px 700 1.15 -0.5px */
+      h1 {
+        font: 700 36px/1.15 var(--font);
+        letter-spacing: -0.5px;
+        color: var(--text-primary);
+        margin-bottom: 24px;
+      }
+      .hero-body {
+        font: 400 16px/1.65 var(--font);
+        color: var(--text-secondary);
+        max-width: 480px;
+        margin-bottom: 40px;
+      }
+      .hero-mark {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+      }
+
+      /* ─── Sections ─── */
+      section {
+        border-top: 1px solid var(--divider);
+        padding: 72px 0;
+      }
+      .s-tinted {
+        background: var(--surface-high);
+      }
+
+      /* H2: 24px 700 1.30 */
+      h2 {
+        font: 700 24px/1.3 var(--font);
+        color: var(--text-primary);
+        margin-bottom: 32px;
+      }
+      /* H4: 15px 700 1.40 */
+      h4 {
+        font: 700 15px/1.4 var(--font);
+        color: var(--text-primary);
+        margin-bottom: 4px;
+      }
+      p {
+        font: 400 14px/1.6 var(--font);
+        color: var(--text-secondary);
+        margin-bottom: 16px;
+        text-align: left;
+      }
+      p:last-child {
+        margin-bottom: 0;
+      }
+
+      /* Text column — constrains width without centering the block */
+      .text-col {
+        max-width: 600px;
+      }
+
+      .rule {
+        margin-top: 24px;
+        padding-top: 16px;
+        border-top: 1px solid var(--border);
+        font: 700 15px/1.5 var(--font);
+        color: var(--text-primary);
+      }
+
+      /* ─── Architecture layers ─── */
+      .layers {
+        display: flex;
+        flex-direction: column;
+        margin-top: 8px;
+      }
+      .layer {
+        display: grid;
+        grid-template-columns: 40px 1fr;
+        gap: 0 32px;
+        padding: 24px 0;
+        border-bottom: 1px solid var(--border);
+        align-items: start;
+      }
+      .layer:last-child {
+        border-bottom: none;
+      }
+      .ln {
+        font: 400 12px/1 var(--mono);
+        color: var(--accent);
+        padding-top: 3px;
+      }
+      .layer-body h4 {
+        margin-bottom: 4px;
+      }
+      .layer-body p {
+        font-size: 13px;
+        line-height: 1.55;
+        margin-bottom: 0;
+      }
+
+      /* ─── Differentiator cards
+       45% opacity at rest · backdrop-blur 2px · no shadow at rest
+       Hover: fully solid · lift 2px · sienna glow ─── */
+      .diff-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+        margin-top: 8px;
+      }
+      .dc {
+        background: var(--card-bg);
+        backdrop-filter: blur(2px);
+        -webkit-backdrop-filter: blur(2px);
+        border: 1px solid var(--border);
+        border-radius: var(--r);
+        padding: 24px;
+        transition:
+          background 200ms ease-out,
+          border-color 200ms ease-out,
+          transform 200ms ease-out,
+          box-shadow 200ms ease-out;
+      }
+      .dc:hover {
+        background: var(--card-bg-solid);
+        border-color: var(--border-hover);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(184, 92, 58, 0.18);
+      }
+      .dc h4 {
+        font: 700 11px/1 var(--font);
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin-bottom: 8px;
+      }
+      .dc p {
+        font-size: 13px;
+        line-height: 1.55;
+        margin-bottom: 0;
+      }
+
+      /* ─── Status badge ─── */
+      .badge-row {
+        margin-bottom: 16px;
+      }
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font: 700 10px/1 var(--font);
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--pend-color);
+        background: var(--pend-bg);
+        border: 1px solid var(--pend-border);
+        border-radius: var(--r);
+        padding: 4px 12px;
+      }
+      .badge::before {
+        content: "";
+        width: 6px;
+        height: 6px;
+        border-radius: 2px;
+        background: currentColor;
+        flex-shrink: 0;
+      }
+
+      /* ─── Advisory ─── */
+      .advisory {
+        background: var(--accent-faint);
+        border-left: 2px solid var(--accent-border);
+        border-radius: 0 var(--r) var(--r) 0;
+        padding: 16px;
+        margin-bottom: 32px;
+      }
+      .advisory p {
+        font: 400 12px/1.5 var(--font);
+        color: var(--text-muted);
+        margin-bottom: 0;
+      }
+      .advisory strong {
+        font-weight: 700;
+        color: var(--text-secondary);
+      }
+
+      /* ─── Footer ─── */
+      footer {
+        border-top: 1px solid var(--divider);
+        padding: 56px 0 72px;
+      }
+      .footer-ctas {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+        margin-bottom: 32px;
+      }
+      .footer-meta {
+        font: 400 12px/1.5 var(--font);
+        color: var(--text-muted);
+      }
+      /* Email addresses are in mailto: hrefs only — not rendered as text */
+
+      /* ─── Responsive ─── */
+      @media (max-width: 960px) {
+        .hero {
+          grid-template-columns: 1fr;
+          padding: 64px var(--pad) 56px;
+          gap: 40px;
+        }
+        .hero-visual {
+          transform: none;
+        }
+        .hero-visual:hover {
+          transform: none;
+        }
+        .hero-img {
+          height: 320px;
+        }
+        .diff-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+        h1 {
+          font-size: 28px;
+        }
+      }
+      @media (max-width: 680px) {
+        :root {
+          --pad: 24px;
+        }
+        nav {
+          padding: 16px var(--pad);
+        }
+        h1 {
+          font-size: 24px;
+        }
+        .diff-grid {
+          grid-template-columns: 1fr;
+        }
+        .hero {
+          padding: 56px var(--pad) 48px;
+        }
+        .lk svg {
+          width: 32px;
+          height: 29px;
+        }
+        .lk-wm {
+          font-size: 11px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ─── Navigation: stacked lockup LEFT · primary button RIGHT ─── -->
+    <nav>
+      <a href="/" class="lk" aria-label="ObligaI home">
+        <!-- Canonical mark — viewBox crops to mark content, 44x40px nav size -->
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="42 14 76 70"
+          width="40"
+          height="37"
+          role="img"
+          aria-hidden="true"
+        >
+          <line
+            x1="80"
+            y1="46"
+            x2="80"
+            y2="34"
+            stroke="#B85C3A"
+            stroke-width="3"
+            stroke-linecap="round"
+          />
+          <line
+            x1="89"
+            y1="61"
+            x2="99"
+            y2="67"
+            stroke="#B85C3A"
+            stroke-width="3"
+            stroke-linecap="round"
+          />
+          <line
+            x1="71"
+            y1="61"
+            x2="61"
+            y2="67"
+            stroke="#B85C3A"
+            stroke-width="3"
+            stroke-linecap="round"
+          />
+          <circle cx="80" cy="56" r="10" fill="#B85C3A" />
+          <circle
+            cx="80"
+            cy="28"
+            r="6"
+            fill="none"
+            stroke="#B85C3A"
+            stroke-width="3"
+          />
+          <circle
+            cx="104"
+            cy="70"
+            r="6"
+            fill="none"
+            stroke="#B85C3A"
+            stroke-width="3"
+          />
+          <circle
+            cx="56"
+            cy="70"
+            r="6"
+            fill="none"
+            stroke="#B85C3A"
+            stroke-width="3"
+          />
+        </svg>
+        <span class="lk-wm">Obliga<em>I</em></span>
+      </a>
+      <a href="mailto:info@oblig.ai" class="btn">Get in touch</a>
+    </nav>
+
+    <main>
+      <!-- ─── Hero: text LEFT · screenshot RIGHT · left-aligned ─── -->
+      <div class="hero">
+        <div class="hero-text">
+          <p class="eyebrow">Regulatory Intelligence</p>
+          <h1>Regulatory requirements,<br />structured.</h1>
+          <p class="hero-body">
+            <span class="wm">Obliga<em>I</em></span> maps the regulatory
+            perimeter of a bank — across jurisdictions and supervisory
+            authorities — into a structured, sourced obligation register and a
+            prefilled compliance workbench for the first and second line of
+            defence.
+          </p>
+          <a href="mailto:founders@oblig.ai" class="btn">Request a pilot</a>
+        </div>
+
+        <!-- Obligation register screenshot — cropped top to hide account row -->
+        <div class="hero-visual">
+          <img
+            src="prototype-obligation.jpg"
+            alt="ObligaI obligation register — showing active obligations, conflict detection, and regulatory provenance"
+            class="hero-img"
+            loading="eager"
+          />
+        </div>
+      </div>
+
+      <!-- ─── What existing tools do not address ─── -->
+      <section class="s-tinted">
+        <div class="spine">
+          <div class="text-col">
+            <h2>The regulatory obligation challenges.</h2>
+            <p>
+              Financial institutions operating across jurisdictions in different
+              geographies face a tremendous amount of regulatory requirements —
+              distributed across multiple instruments, regulatory levels, and
+              supervisory authorities. The complete picture is assembled
+              manually, over days, by experience. Requirements discovered late —
+              at validation, audit, or supervisory review — cost significantly
+              more to address than requirements identified at the outset.
+            </p>
+            <p class="rule">
+              The regulatory perimeter of an institution is not a flat list. It
+              is a graph.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ─── Architecture ─── -->
+      <section>
+        <div class="spine">
+          <div class="text-col">
+            <h2>
+              Six layers from regulatory source<br />
+              to obligations mapped to policies and procedures.
+            </h2>
+            <div class="layers">
+              <div class="layer">
+                <span class="ln">01</span>
+                <div class="layer-body">
+                  <h4>Client Profile</h4>
+                  <p>
+                    Legal entity, business lines, international regulatory
+                    footprint, risk profile, products, markets, geographies,
+                    extraterritorial coverage. These determine the scope of
+                    every subsequent layer.
+                  </p>
+                </div>
+              </div>
+
+              <div class="layer">
+                <span class="ln">02</span>
+                <div class="layer-body">
+                  <h4>Regulatory Sources</h4>
+                  <p>
+                    Supervisory authorities with jurisdiction over the
+                    institution. Scope defined by client profile.
+                  </p>
+                </div>
+              </div>
+
+              <div class="layer">
+                <span class="ln">03</span>
+                <div class="layer-body">
+                  <h4>Regulatory Library</h4>
+                  <p>
+                    Regulatory instruments ingested from primary sources and
+                    structured at (sub)article level. Each article classified by
+                    its regulatory function.
+                  </p>
+                </div>
+              </div>
+
+              <div class="layer">
+                <span class="ln">04</span>
+                <div class="layer-body">
+                  <h4>Knowledge Graph</h4>
+                  <p>
+                    Requirements linked across instruments, regulatory levels,
+                    and jurisdictions. Cross-instrument references resolved
+                    automatically. Tension and/or incompatibility detection is
+                    structural.
+                  </p>
+                </div>
+              </div>
+
+              <div class="layer">
+                <span class="ln">05</span>
+                <div class="layer-body">
+                  <h4>Obligation Register</h4>
+                  <p>
+                    <strong>WHAT</strong> — the regulatory requirement,
+                    read-only with full source provenance.
+                    <strong>HOW</strong> — the institution's documented
+                    procedure for compliance.
+                  </p>
+                </div>
+              </div>
+
+              <div class="layer">
+                <span class="ln">06</span>
+                <div class="layer-body">
+                  <h4>Compliance Workbench</h4>
+                  <p>
+                    Role-based prefilled regulatory checklists. Each function
+                    sees only the regulations relevant to its work. All output
+                    is advisory.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ─── Differentiators ─── -->
+      <section class="s-tinted">
+        <div class="spine">
+          <h2>What makes it different.</h2>
+          <div class="diff-grid">
+            <div class="dc">
+              <h4>Complete regulatory picture</h4>
+              <p>
+                All requirements bearing on a matter — traversed across
+                instruments and levels in a single pass. No requirement is
+                missed because a source was not manually identified.
+              </p>
+            </div>
+
+            <div class="dc">
+              <h4>Advisory output</h4>
+              <p>
+                <span class="wm">Obliga<em>I</em></span> surfaces what
+                regulations say and presents candidate requirements for the
+                institution to review and adopt. Compliance determinations
+                remain with the institution.
+              </p>
+            </div>
+
+            <div class="dc">
+              <h4>Full provenance</h4>
+              <p>
+                Every checklist item traces to a specific article in a specific
+                instrument at a specific level of the regulatory hierarchy. The
+                audit trail is built in.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ─── Founder ─── -->
+      <section>
+        <div class="spine">
+          <div class="text-col">
+            <h2>The founder.</h2>
+            <p>
+              Dirard Mikdad founded
+              <span class="wm">Obliga<em>I</em></span> in 2026. He spent 19
+              years in regulatory intelligence. First at Rabobank and Deloitte
+              in the Netherlands, and at PwC UK. At Deloitte he designed, and
+              built RegMiner in 2019 — one of the first regulatory technology
+              analytics platforms in the market. He has worked directly with
+              compliance and risk functions at major financial institutions in
+              the EU and the UK.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ─── Current status ─── -->
+      <section class="s-tinted">
+        <div class="spine">
+          <div class="text-col">
+            <h2>Current status.</h2>
+            <div class="badge-row">
+              <span class="badge">Prototype</span>
+            </div>
+            <p>
+              <span class="wm">Obliga<em>I</em></span> is a working prototype
+              demonstrating the full six-layer architecture across multiple
+              jurisdictions in the US, the UK, the EU and LatAM.
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ─── Footer ─── -->
+    <footer>
+      <div class="spine">
+        <div class="advisory">
+          <p>
+            <strong>Advisory.</strong>
+            <span class="wm">Obliga<em>I</em></span> output is advisory.
+            Compliance determinations remain with the institution's compliance
+            function and legal counsel.
+          </p>
+        </div>
+
+        <div class="footer-ctas">
+          <!-- Email addresses in href only — not rendered as visible text -->
+          <a href="mailto:info@oblig.ai" class="btn">Get in touch</a>
+          <a href="mailto:founders@oblig.ai" class="btn btn-ghost"
+            >For investors</a
+          >
+        </div>
+
+        <p class="footer-meta">
+          © 2026 <span class="wm">Obliga<em>I</em></span> Inc. Delaware, United
+          States.
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>
