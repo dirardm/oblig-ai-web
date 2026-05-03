@@ -1,547 +1,542 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Oblig.ai — Regulatory Obligation Management</title>
-  <meta name="description" content="Oblig.ai is a regulatory obligation management platform that helps financial institutions identify, structure and monitor their regulatory requirements across multiple jurisdictions.">
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="Oblig.ai">
-  <meta property="og:description" content="Regulatory obligation management for financial institutions.">
-  <meta property="og:url" content="https://oblig.ai">
-  <meta property="og:image" content="https://oblig.ai/og.png">
-  <meta name="theme-color" content="#FAF7F4">
-  <link rel="canonical" href="https://oblig.ai">
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
-  <style>
-    /* ── Brand tokens ── */
-    :root {
-      --sienna:        #B85C3A;
-      --sienna-100:    #F0D4C8;
-      --sienna-shadow: rgba(184, 92, 58, 0.28);
-      --page-bg:       #FAF7F4;
-      --surface:       #FFFFFF;
-      --text-primary:  #0F0F0F;
-      --text-secondary:#5A5248;
-      --text-muted:    #8A7E75;
-      --border:        #EAD8CD;
-      --sans:          'Inter', -apple-system, sans-serif;
-    }
-
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    html { -webkit-font-smoothing: antialiased; }
-
-    body {
-      background: var(--page-bg);
-      color: var(--text-primary);
-      font-family: var(--sans);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    /* ── Layout ── */
-    .container {
-      max-width: 1080px;
-      margin: 0 auto;
-      padding: 0 40px;
-      width: 100%;
-    }
-
-    /* ── Nav ── */
-    nav {
-      padding: 32px 0 16px;
-    }
-
-    .wordmark {
-      display: inline-flex;
-      flex-direction: column;
-      align-items: center;
-      text-decoration: none;
-      gap: 4px;
-    }
-
-    .wordmark-text {
-      font-family: var(--sans);
-      font-weight: 700;
-      font-size: 16px;
-      letter-spacing: -0.3px;
-      color: var(--text-primary);
-      line-height: 1;
-    }
-
-    .wordmark-text em,
-    .brand em,
-    .brand-i {
-      font-family: Georgia, 'Times New Roman', serif;
-      font-style: italic;
-      color: var(--sienna);
-      font-weight: 700;
-    }
-
-    .wordmark svg line { stroke: var(--sienna); }
-    .wordmark svg circle { stroke: var(--sienna); fill: none; }
-    .wordmark svg circle:first-of-type { fill: var(--sienna); stroke: none; }
-
-
-    /* ── Hero ── */
-    .hero {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 64px 0 80px;
-    }
-
-    .eyebrow {
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 4px;
-      color: var(--sienna);
-      text-transform: uppercase;
-      margin-bottom: 32px;
-    }
-
-    .hero-title {
-      font-size: clamp(28px, 4vw, 44px);
-      font-weight: 700;
-      line-height: 1.1;
-      letter-spacing: -0.5px;
-      color: var(--text-primary);
-      max-width: 680px;
-      margin-bottom: 32px;
-    }
-
-    .hero-title span {
-      color: var(--sienna);
-    }
-
-    .hero-body {
-      font-size: 18px;
-      line-height: 1.7;
-      color: var(--text-secondary);
-      max-width: 560px;
-      margin-bottom: 48px;
-    }
-
-    /* ── Section headers ── */
-    .section-header {
-      margin-bottom: 24px;
-    }
-
-    .section-header .eyebrow {
-      margin-bottom: 8px;
-    }
-
-    .section-title {
-      font-size: 22px;
-      font-weight: 700;
-      letter-spacing: -0.3px;
-      color: var(--text-primary);
-      line-height: 1.2;
-    }
-
-    /* ── Cards ── */
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-      margin-bottom: 64px;
-    }
-
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 2px;
-      padding: 24px;
-    }
-
-    .card-label {
-      font-size: 9px;
-      font-weight: 700;
-      letter-spacing: 3px;
-      color: var(--sienna);
-      text-transform: uppercase;
-      margin-bottom: 16px;
-    }
-
-    .card-body {
-      font-size: 13px;
-      line-height: 1.65;
-      color: var(--text-secondary);
-    }
-
-    /* ── Layers visualization ── */
-    .layers {
-      margin-bottom: 64px;
-    }
-
-    .layers-inner {
-      display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      gap: 0;
-      border: 1px solid var(--border);
-      border-radius: 2px;
-      overflow: hidden;
-    }
-
-    .layer {
-      position: relative;
-      background: var(--surface);
-      padding: 24px 20px 20px;
-      border-right: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      animation: fadeUp 0.4s ease calc(var(--i) * 0.07s + 0.1s) both;
-    }
-
-    .layer:last-child {
-      border-right: none;
-    }
-
-    .layer--accent {
-      background: var(--sienna-100);
-    }
-
-    .layer--terminal {
-      background: var(--page-bg);
-    }
-
-    .layer-number {
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 3px;
-      color: var(--sienna);
-    }
-
-    .layer-name {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text-primary);
-      line-height: 1.3;
-      margin-bottom: 8px;
-    }
-
-    .layer-desc {
-      font-size: 11px;
-      line-height: 1.6;
-      color: var(--text-secondary);
-    }
-
-    .layer-arrow {
-      margin-top: auto;
-      font-size: 14px;
-      color: var(--sienna);
-      opacity: 0.4;
-      text-align: right;
-    }
-
-    /* connector bar at top */
-    .layer::before {
-      content: '';
-      display: block;
-      height: 3px;
-      background: var(--border);
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-    }
-
-    .layer--accent::before {
-      background: var(--sienna);
-      opacity: 0.5;
-    }
-
-    .layer--terminal::before {
-      background: var(--sienna);
-      opacity: 0.25;
-    }
-
-    /* ── Mobile layers ── */
-    @media (max-width: 900px) {
-      .layers-inner {
-        grid-template-columns: repeat(3, 1fr);
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ObligaI — Regulatory Intelligence</title>
+    <meta name="description" content="ObligaI maps the regulatory perimeter of a bank into a structured obligation register and prefilled compliance workbench." />
+    <meta property="og:title" content="ObligaI — Regulatory Intelligence" />
+    <meta property="og:description" content="ObligaI maps the regulatory perimeter of a bank into a structured obligation register and prefilled compliance workbench." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://oblig.ai" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet" />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='42 14 76 70'><line x1='80' y1='46' x2='80' y2='34' stroke='%23B85C3A' stroke-width='3' stroke-linecap='round'/><line x1='89' y1='61' x2='99' y2='67' stroke='%23B85C3A' stroke-width='3' stroke-linecap='round'/><line x1='71' y1='61' x2='61' y2='67' stroke='%23B85C3A' stroke-width='3' stroke-linecap='round'/><circle cx='80' cy='56' r='10' fill='%23B85C3A'/><circle cx='80' cy='28' r='6' fill='none' stroke='%23B85C3A' stroke-width='3'/><circle cx='104' cy='70' r='6' fill='none' stroke='%23B85C3A' stroke-width='3'/><circle cx='56' cy='70' r='6' fill='none' stroke='%23B85C3A' stroke-width='3'/></svg>" />
+    <style>
+      *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+      :root{
+        --page-bg:#faf7f4;--surface:#ffffff;--surface-high:#f5f0eb;
+        --text-primary:#0f0f0f;--text-secondary:#5a5248;--text-muted:#8a7e75;
+        --text-inverse:#f8f8f8;--accent:#b85c3a;--accent-active:#9a4830;
+        --accent-faint:rgba(184,92,58,0.08);--accent-border:rgba(184,92,58,0.28);
+        --border:rgba(184,92,58,0.12);--border-hover:rgba(184,92,58,0.28);
+        --divider:rgba(184,92,58,0.1);--focus-ring:#b85c3a;
+        --card-bg:rgba(255,255,255,0.45);--card-bg-solid:#ffffff;
+        --pend-color:#c9a84c;--pend-bg:rgba(201,168,76,0.1);--pend-border:rgba(201,168,76,0.3);
+        --font:"Inter",-apple-system,BlinkMacSystemFont,sans-serif;
+        --mono:"JetBrains Mono","SF Mono",Menlo,monospace;
+        --serif:Georgia,"Times New Roman",serif;
+        --r:2px;--pad:48px;--max:1200px;
       }
-      .layer:nth-child(3) { border-right: none; }
-      .layer:nth-child(4), .layer:nth-child(5), .layer:nth-child(6) {
-        border-top: 1px solid var(--border);
+      @media(prefers-color-scheme:dark){
+        :root{
+          --page-bg:#080808;--surface:#111111;--surface-high:#161616;
+          --text-primary:#f8f8f8;--text-secondary:#c8c0b8;--text-muted:#8a7e75;
+          --text-inverse:#0f0f0f;--accent-faint:rgba(184,92,58,0.12);
+          --accent-border:rgba(184,92,58,0.35);--border:rgba(248,248,248,0.08);
+          --border-hover:rgba(248,248,248,0.24);--divider:rgba(248,248,248,0.08);
+          --card-bg:rgba(17,17,17,0.45);--card-bg-solid:#111111;
+        }
       }
-    }
-
-    @media (max-width: 560px) {
-      .layers-inner {
-        grid-template-columns: 1fr 1fr;
+      [data-theme="dark"]{
+        --page-bg:#080808;--surface:#111111;--surface-high:#161616;
+        --text-primary:#f8f8f8;--text-secondary:#c8c0b8;--text-muted:#8a7e75;
+        --text-inverse:#0f0f0f;--accent-faint:rgba(184,92,58,0.12);
+        --accent-border:rgba(184,92,58,0.35);--border:rgba(248,248,248,0.08);
+        --border-hover:rgba(248,248,248,0.24);--divider:rgba(248,248,248,0.08);
+        --card-bg:rgba(17,17,17,0.45);--card-bg-solid:#111111;
       }
-      .layer:nth-child(odd) { border-right: 1px solid var(--border); }
-      .layer:nth-child(even) { border-right: none; }
-      .layer:not(:nth-child(1)):not(:nth-child(2)) {
-        border-top: 1px solid var(--border);
+
+      html{scroll-behavior:smooth}
+      body{background:var(--page-bg);color:var(--text-primary);font-family:var(--font);font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased}
+
+      .wm{font-weight:500;white-space:nowrap}
+      .wm em,nav .lk-wm em,.lk-wm em{font-family:var(--serif);font-style:italic;color:var(--accent);margin-left:-0.04em}
+
+      .spine{max-width:var(--max);margin:0 auto;padding:0 var(--pad)}
+
+      nav{padding:16px var(--pad);border-bottom:1px solid var(--divider);display:flex;align-items:center;justify-content:space-between;max-width:100%;background:var(--page-bg)}
+      .lk{display:inline-flex;flex-direction:column;align-items:flex-start;gap:8px;text-decoration:none}
+      .lk svg{display:block}
+      .lk-wm{font:500 13px/1 var(--font);letter-spacing:-0.01em;color:var(--text-primary)}
+
+      .btn{display:inline-flex;align-items:center;justify-content:center;font:700 11px/1 var(--font);letter-spacing:1.5px;text-transform:uppercase;text-decoration:none;padding:8px 24px;min-height:40px;border-radius:0;border:1px solid var(--accent);color:var(--accent);background:transparent;cursor:pointer;white-space:nowrap;transition:all 150ms ease-out}
+      .btn:hover{background:var(--accent);color:var(--text-inverse);transform:translateY(-1px);box-shadow:0 4px 12px rgba(184,92,58,0.35)}
+      .btn:active{background:var(--accent-active);color:var(--text-inverse);transform:translateY(0);box-shadow:none}
+      .btn:focus-visible{outline:2px solid var(--focus-ring);outline-offset:2px}
+      .btn-ghost{border-color:transparent;color:var(--text-secondary)}
+      .btn-ghost:hover{border-color:var(--accent);background:var(--accent);color:var(--text-inverse)}
+
+      /* ─── Hero ─── */
+      .hero{max-width:var(--max);margin:0 auto;padding:88px var(--pad) 80px;display:grid;grid-template-columns:1fr 1.4fr;gap:64px;align-items:center}
+      .hero-visual{border-radius:var(--r);overflow:hidden;border:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,0.06),0 16px 48px rgba(0,0,0,0.1),0 0 0 1px rgba(184,92,58,0.08);transform:perspective(1200px) rotateY(-4deg) rotateX(2deg);transition:transform 400ms ease-out,box-shadow 400ms ease-out;cursor:zoom-in}
+      .hero-visual:hover{transform:perspective(1200px) rotateY(-1deg) rotateX(0deg);box-shadow:0 4px 16px rgba(0,0,0,0.08),0 32px 72px rgba(0,0,0,0.14),0 0 0 1px rgba(184,92,58,0.12)}
+      .hero-img{display:block;width:100%;height:340px;object-fit:cover;object-position:top left;}
+      .eyebrow{font:700 10px/1 var(--font);letter-spacing:2.5px;text-transform:uppercase;color:var(--accent);margin-bottom:16px}
+      h1{font:700 36px/1.15 var(--font);letter-spacing:-0.5px;color:var(--text-primary);margin-bottom:24px}
+      .hero-body{font:400 16px/1.65 var(--font);color:var(--text-secondary);max-width:480px;margin-bottom:40px}
+
+      /* ─── Thumbnail + modal ─── */
+      .thumb{
+        position:relative;
+        cursor:zoom-in;
+        border-radius:var(--r);
+        overflow:hidden;
+        border:1px solid var(--border);
+        box-shadow:0 2px 8px rgba(0,0,0,0.06),0 8px 32px rgba(0,0,0,0.10);
+        transition:transform 200ms ease,box-shadow 200ms ease;
+        display:block;
       }
-    }
-
-    /* ── CTA ── */
-    .cta-row {
-      display: flex;
-      align-items: center;
-      gap: 24px;
-      flex-wrap: wrap;
-    }
-
-    .cta-primary {
-      display: inline-block;
-      padding: 13px 28px;
-      background: transparent;
-      color: var(--sienna);
-      border: 1px solid var(--sienna);
-      font-family: var(--sans);
-      font-size: 13px;
-      font-weight: 600;
-      letter-spacing: 0.3px;
-      text-decoration: none;
-      border-radius: 0;
-      transition: background 0.15s,
-        color 0.15s,
-        box-shadow 0.15s,
-        transform 0.1s;
-    }
-
-    .cta-primary:hover {
-      background: var(--sienna);
-      color: var(--surface);
-      transform: translateY(-1px);
-      box-shadow: 0 2px 12px var(--sienna-shadow);
-    }
-
-    .cta-secondary {
-      font-size: 13px;
-      color: var(--text-muted);
-      text-decoration: none;
-    }
-
-    .cta-secondary:hover {
-      color: var(--text-primary);
-    }
-
-    /* ── Focus ── */
-    .wordmark:focus-visible,
-    .cta-primary:focus-visible,
-    .cta-secondary:focus-visible,
-    .footer-links a:focus-visible {
-      outline: 2px solid var(--sienna);
-      outline-offset: 3px;
-    }
-
-    /* ── Divider accent ── */
-    .accent-line {
-      width: 40px;
-      height: 2px;
-      background: var(--sienna);
-      margin-bottom: 48px;
-    }
-
-    /* ── Footer ── */
-    footer {
-      padding: 32px 0 40px;
-      border-top: 1px solid var(--border);
-    }
-
-    .footer-inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 16px;
-    }
-
-    .footer-copy {
-      font-size: 12px;
-      color: var(--text-muted);
-    }
-
-    .footer-links {
-      display: flex;
-      gap: 24px;
-    }
-
-    .footer-links a {
-      font-size: 12px;
-      color: var(--text-muted);
-      text-decoration: none;
-    }
-
-    .footer-links a:hover {
-      color: var(--text-primary);
-    }
-
-    /* ── Fade in ── */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(16px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    .hero { animation: fadeUp 0.5s ease both; }
-    .cards { animation: fadeUp 0.5s ease 0.1s both; }
-    .cta-row { animation: fadeUp 0.5s ease 0.2s both; }
-
-    /* ── Reduced motion ── */
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        animation-duration: 0.01ms !important;
-        transition-duration: 0.01ms !important;
+      .thumb:hover{
+        transform:translateY(-2px);
+        box-shadow:0 4px 16px rgba(0,0,0,0.10),0 16px 48px rgba(184,92,58,0.12);
       }
-    }
+      .thumb img{display:block;width:100%;height:320px;object-fit:cover;object-position:top left;}
+      .thumb.graph img{height:320px;object-fit:cover;object-position:32% 52%;}
+      .thumb-hint{
+        position:absolute;
+        bottom:10px;right:10px;
+        background:rgba(0,0,0,0.55);
+        color:#fff;
+        font:700 10px/1 var(--font);
+        letter-spacing:1.5px;
+        text-transform:uppercase;
+        padding:5px 10px;
+        border-radius:2px;
+        pointer-events:none;
+      }
 
-    /* ── Mobile ── */
-    @media (max-width: 680px) {
-      .container { padding: 0 24px; }
-      .hero { padding: 64px 0 48px; }
-      .cards { grid-template-columns: 1fr; }
-      .hero-body { font-size: 16px; }
-      .wordmark svg { width: 48px; height: 44px; }
-      .wordmark-text { font-size: 12px; }
-    }
-  </style>
-</head>
-<body>
+      /* Modal */
+      .modal-overlay{
+        display:none;
+        position:fixed;
+        inset:0;
+        background:rgba(0,0,0,0.88);
+        z-index:1000;
+        align-items:center;
+        justify-content:center;
+        padding:32px;
+        cursor:zoom-out;
+      }
+      .modal-overlay.open{display:flex}
+      .modal-img{
+        max-width:100%;
+        max-height:90vh;
+        border-radius:var(--r);
+        box-shadow:0 32px 80px rgba(0,0,0,0.60);
+        display:block;
+        cursor:default;
+      }
+      .modal-close{
+        position:fixed;
+        top:20px;right:24px;
+        background:none;
+        border:none;
+        color:#fff;
+        font-size:28px;
+        cursor:pointer;
+        line-height:1;
+        opacity:0.7;
+        transition:opacity 150ms;
+      }
+      .modal-close:hover{opacity:1}
 
-  <div class="container">
-    <nav aria-label="Main">
-      <a href="/" class="wordmark">
-        <svg xmlns="http://www.w3.org/2000/svg"
-          viewBox="42 14 76 70"
-          width="64" height="59">
-          <line x1="80" y1="46" x2="80" y2="34"
-            stroke-width="3" stroke-linecap="round"/>
-          <line x1="89" y1="61" x2="99" y2="67"
-            stroke-width="3" stroke-linecap="round"/>
-          <line x1="71" y1="61" x2="61" y2="67"
-            stroke-width="3" stroke-linecap="round"/>
-          <circle cx="80" cy="56" r="10"/>
-          <circle cx="80" cy="28" r="6" stroke-width="3"/>
-          <circle cx="104" cy="70" r="6" stroke-width="3"/>
-          <circle cx="56" cy="70" r="6" stroke-width="3"/>
+      /* ─── Sections ─── */
+      section{border-top:1px solid var(--divider);padding:72px 0}
+      .s-tinted{background:var(--surface-high)}
+      h2{font:700 24px/1.3 var(--font);color:var(--text-primary);margin-bottom:8px}
+      .section-sub{font:400 15px/1.6 var(--font);color:var(--text-muted);margin-bottom:40px;max-width:560px}
+      h4{font:700 15px/1.4 var(--font);color:var(--text-primary);margin-bottom:4px}
+      p{font:400 14px/1.6 var(--font);color:var(--text-secondary);margin-bottom:16px;text-align:left}
+      p:last-child{margin-bottom:0}
+      .text-col{max-width:600px}
+      .rule{margin-top:24px;padding-top:16px;border-top:1px solid rgba(184,92,58,0.30);font:700 15px/1.5 var(--font);color:var(--accent)}
+
+      /* ─── Knowledge graph visual — now uses .thumb ─── */
+
+      /* ─── Pipeline cards ─── */
+      .pipeline{
+        display:grid;
+        grid-template-columns:repeat(6,1fr);
+        gap:0;
+        margin-top:48px;
+        position:relative;
+      }
+      /* Connecting line behind cards */
+      .pipeline::before{
+        content:'';
+        position:absolute;
+        top:28px;
+        left:calc(100% / 12);
+        right:calc(100% / 12);
+        height:1px;
+        background:var(--accent-border);
+        z-index:0;
+      }
+      .pc{
+        position:relative;
+        z-index:1;
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        padding:0 8px;
+        cursor:default;
+      }
+      /* Node circle */
+      .pc-node{
+        width:56px;
+        height:56px;
+        border-radius:50%;
+        border:1.5px solid var(--accent-border);
+        background:var(--surface);
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        font:400 11px/1 var(--mono);
+        color:var(--accent);
+        letter-spacing:1px;
+        margin-bottom:16px;
+        transition:background 200ms ease,border-color 200ms ease,transform 200ms ease,box-shadow 200ms ease;
+        flex-shrink:0;
+      }
+      .pc:hover .pc-node{
+        background:var(--accent);
+        border-color:var(--accent);
+        color:var(--text-inverse);
+        transform:translateY(-3px);
+        box-shadow:0 8px 24px rgba(184,92,58,0.30);
+      }
+      .pc-title{
+        font:700 13px/1.3 var(--font);
+        color:var(--text-primary);
+        text-align:center;
+        margin-bottom:6px;
+        transition:color 200ms ease;
+      }
+      .pc:hover .pc-title{color:var(--accent)}
+      .pc-desc{
+        font:400 11px/1.5 var(--font);
+        color:var(--text-muted);
+        text-align:center;
+      }
+
+      /* Arrow between nodes */
+      .pc:not(:last-child)::after{
+        content:'';
+        position:absolute;
+        top:27px;
+        right:-4px;
+        width:8px;
+        height:8px;
+        border-top:1.5px solid var(--accent-border);
+        border-right:1.5px solid var(--accent-border);
+        transform:rotate(45deg);
+        z-index:2;
+      }
+
+      /* ─── Differentiator cards ─── */
+      .diff-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:40px}
+      .dc{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:24px;transition:background 200ms ease-out,border-color 200ms ease-out,transform 200ms ease-out,box-shadow 200ms ease-out}
+      .dc:hover{background:var(--surface);border-color:var(--border-hover);transform:translateY(-2px);box-shadow:0 8px 24px rgba(184,92,58,0.18)}
+      .dc h4{font:700 11px/1 var(--font);letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+      .dc p{font-size:13px;line-height:1.55;margin-bottom:0}
+
+      /* ─── Status badge ─── */
+      .badge-row{margin-bottom:16px}
+      .badge{display:inline-flex;align-items:center;gap:8px;font:700 10px/1 var(--font);letter-spacing:2px;text-transform:uppercase;color:var(--pend-color);background:var(--pend-bg);border:1px solid var(--pend-border);border-radius:var(--r);padding:4px 12px}
+      .badge::before{content:'';width:6px;height:6px;border-radius:2px;background:currentColor;flex-shrink:0}
+
+      /* ─── Advisory ─── */
+      .advisory{background:var(--accent-faint);border-left:2px solid var(--accent-border);border-radius:0 var(--r) var(--r) 0;padding:16px;margin-bottom:32px}
+      .advisory p{font:400 12px/1.5 var(--font);color:var(--text-muted);margin-bottom:0}
+      .advisory strong{font-weight:700;color:var(--text-secondary)}
+
+      /* ─── Footer ─── */
+      footer{border-top:1px solid var(--divider);padding:56px 0 72px}
+      .footer-ctas{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:32px}
+      .footer-meta{font:400 12px/1.5 var(--font);color:var(--text-muted)}
+
+      /* ─── Responsive ─── */
+      @media(max-width:960px){
+        .hero{grid-template-columns:1fr;padding:64px var(--pad) 56px;gap:40px}
+        .hero-visual{transform:none}
+        .hero-visual:hover{transform:none}
+        .hero-img{height:320px}
+        .diff-grid{grid-template-columns:1fr 1fr}
+        h1{font-size:28px}
+        .pipeline{grid-template-columns:repeat(3,1fr);gap:24px}
+        .pipeline::before{display:none}
+        .pc::after{display:none}
+      }
+      @media(max-width:680px){
+        :root{--pad:24px}
+        nav{padding:16px var(--pad)}
+        h1{font-size:24px}
+        .diff-grid{grid-template-columns:1fr}
+        .hero{padding:56px var(--pad) 48px}
+        .lk svg{width:32px;height:29px}
+        .lk-wm{font-size:11px}
+        .pipeline{grid-template-columns:repeat(2,1fr);gap:24px}
+      }
+    </style>
+  </head>
+  <body>
+
+    <!-- ─── Navigation ─── -->
+    <nav>
+      <a href="/" class="lk" aria-label="ObligaI home">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="42 14 76 70" width="40" height="37" role="img" aria-hidden="true">
+          <line x1="80" y1="46" x2="80" y2="34" stroke="#B85C3A" stroke-width="3" stroke-linecap="round"/>
+          <line x1="89" y1="61" x2="99" y2="67" stroke="#B85C3A" stroke-width="3" stroke-linecap="round"/>
+          <line x1="71" y1="61" x2="61" y2="67" stroke="#B85C3A" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="80" cy="56" r="10" fill="#B85C3A"/>
+          <circle cx="80" cy="28" r="6" fill="none" stroke="#B85C3A" stroke-width="3"/>
+          <circle cx="104" cy="70" r="6" fill="none" stroke="#B85C3A" stroke-width="3"/>
+          <circle cx="56" cy="70" r="6" fill="none" stroke="#B85C3A" stroke-width="3"/>
         </svg>
-        <span class="wordmark-text">Obliga<em>I</em></span>
+        <span class="lk-wm">Obliga<em>I</em></span>
       </a>
+      <a href="mailto:info@oblig.ai" class="btn">Get in touch</a>
     </nav>
 
     <main>
-    <section class="hero">
-      <p class="eyebrow">Regulatory Intelligence</p>
 
-      <h1 class="hero-title">
-        Identifying regulatory requirements.<br>
-        Mapping them into <span>obligation registers.</span>
-      </h1>
-
-      <div class="accent-line"></div>
-
-      <p class="hero-body">
-        <span class="brand">Obliga<em>I</em></span> is a regulatory obligation management platform for financial institutions operating across multiple jurisdictions. It translates regulatory texts into structured obligations and maps them to the procedures that satisfy them — making the regulatory perimeter of an institution visible, auditable, and maintainable.
-      </p>
-
-      <div class="section-header">
-        <p class="eyebrow">Overview</p>
-        <h2 class="section-title">What <span class="brand">Obliga<em>I</em></span> does.</h2>
-      </div>
-
-      <div class="cards">
-        <div class="card">
-          <p class="card-label">The Challenge</p>
-          <p class="card-body">Financial institutions operating across jurisdictions carry hundreds of regulatory obligations. Most are managed in spreadsheets. Few are connected to the procedures that satisfy them. Fewer still are monitored for conflicts between regulators.</p>
+      <!-- ─── Hero ─── -->
+      <div class="hero">
+        <div class="hero-text">
+          <p class="eyebrow">Regulatory Intelligence</p>
+          <h1>Regulatory requirements,<br />structured.</h1>
+          <p class="hero-body">
+            <span class="wm">Obliga<em>I</em></span> maps the regulatory
+            perimeter of a bank — across jurisdictions and supervisory
+            authorities — into a structured, sourced obligation register and a
+            prefilled compliance workbench for the first and second line of
+            defence.
+          </p>
+          <a href="mailto:founders@oblig.ai" class="btn">Request a pilot</a>
         </div>
-        <div class="card">
-          <p class="card-label">The Platform</p>
-          <p class="card-body">Six layers from regulatory source to compliance workbench. Each obligation has a WHAT — the legal requirement, read-only — and a HOW — the institution's documented procedure for satisfying it. Coverage is the percentage of obligations with a documented HOW.</p>
-        </div>
-        <div class="card">
-          <p class="card-label">The Architecture</p>
-          <p class="card-body">Conflict detection is a structural property of the knowledge graph. When two regulations give incompatible instructions on the same data activity, the graph surfaces it as a conflict node — not as a keyword match, not as a manual review flag.</p>
+
+        <div class="thumb" onclick="openModal('prototype-obligation.jpg','Obligation Register — active obligations, conflict detection, regulatory provenance')">
+          <img src="prototype-obligation.jpg" alt="ObligaI obligation register" loading="eager" />
+          <span class="thumb-hint">Click to expand</span>
         </div>
       </div>
 
-      <div class="section-header">
-        <p class="eyebrow">Platform Architecture</p>
-        <h2 class="section-title">Six layers from regulator to workbench.</h2>
-      </div>
-
-      <div class="layers">
-        <div class="layers-inner">
-          <div class="layer" style="--i:0">
-            <div class="layer-number">01</div>
-            <div class="layer-content">
-              <div class="layer-name">Client Profile</div>
-              <div class="layer-desc">Legal entity, business lines, international footprint, risk profile. Determines which regulators apply.</div>
-            </div>
-            <div class="layer-arrow">↓</div>
-          </div>
-          <div class="layer" style="--i:1">
-            <div class="layer-number">02</div>
-            <div class="layer-content">
-              <div class="layer-name">Regulatory Sources</div>
-              <div class="layer-desc">Supervisory authorities with jurisdiction over the institution. Scope defined by client profile.</div>
-            </div>
-            <div class="layer-arrow">↓</div>
-          </div>
-          <div class="layer" style="--i:2">
-            <div class="layer-number">03</div>
-            <div class="layer-content">
-              <div class="layer-name">Regulatory Library</div>
-              <div class="layer-desc">Regulatory frameworks mapped to the institution's perimeter. Full-text ingestion and NLP extraction in Phase 2.</div>
-            </div>
-            <div class="layer-arrow">↓</div>
-          </div>
-          <div class="layer" style="--i:3">
-            <div class="layer-number">04</div>
-            <div class="layer-content">
-              <div class="layer-name">Knowledge Graph</div>
-              <div class="layer-desc">Ontological mapping of regulators, regulations, obligations and conflicts. Structural conflict detection.</div>
-            </div>
-            <div class="layer-arrow">↓</div>
-          </div>
-          <div class="layer layer--accent" style="--i:4">
-            <div class="layer-number">05</div>
-            <div class="layer-content">
-              <div class="layer-name">Obligation Register</div>
-              <div class="layer-desc">Each obligation: a WHAT (the legal requirement, read-only) and a HOW (the institution's documented procedure). Coverage = percentage of obligations with a documented HOW.</div>
-            </div>
-            <div class="layer-arrow">↓</div>
-          </div>
-          <div class="layer layer--terminal" style="--i:5">
-            <div class="layer-number">06</div>
-            <div class="layer-content">
-              <div class="layer-name">Compliance Workbench</div>
-              <div class="layer-desc">The analyst interface. Obligation detail, evidence locker, action panel, audit trail. Every action logged with timestamp and actor.</div>
-            </div>
+      <!-- ─── The problem ─── -->
+      <section class="s-tinted">
+        <div class="spine">
+          <div class="text-col">
+            <h2>The regulatory technology gap</h2>
+            <p>
+              Financial institutions operating across jurisdictions face a large
+              number of regulatory requirements — distributed across multiple
+              instruments, regulatory levels, and supervisory authorities. The
+              complete picture is assembled manually, over days, by experience.
+              Requirements discovered late — at validation, audit, or
+              supervisory review — cost significantly more to address than
+              requirements identified at the outset.
+            </p>
+            <p>
+              The constraint is not access to regulatory text. Every regulation is
+              publicly available. The difficulty is assembly: identifying every
+              applicable instrument, understanding how requirements
+              cross-reference one another, and mapping them to the
+              institution's specific activities and jurisdictional footprint.
+            </p>
+            <p class="rule">
+              The regulatory perimeter of an institution is not a flat list.
+              It is a graph.
+            </p>
           </div>
         </div>
-      </div>
+      </section>
 
-      <div class="cta-row">
-        <a href="mailto:info@oblig.ai" class="cta-primary">Get in touch</a>
-        <a href="mailto:founders@oblig.ai" class="cta-secondary">For investors — founders@oblig.ai</a>
-      </div>
-    </section>
+      <!-- ─── Architecture pipeline ─── -->
+      <section>
+        <div class="spine">
+          <h2>From regulatory source to documented obligation</h2>
+          <p class="section-sub">
+            Six layers: nothing in the pipeline exists independently of the client profile at its root.
+          </p>
+
+          <div class="thumb graph" onclick="openModal('knowledge-graph.jpg','Knowledge graph — regulatory relationships and cross-jurisdiction conflict detection')" style="margin:40px 0 56px;max-width:560px;">
+            <img src="knowledge-graph.jpg" alt="ObligaI knowledge graph" loading="lazy" />
+            <span class="thumb-hint">Click to expand</span>
+          </div>
+
+          <div class="pipeline">
+
+            <div class="pc">
+              <div class="pc-node">01</div>
+              <div class="pc-title">Client Profile</div>
+              <div class="pc-desc">Jurisdictions, business lines, regulatory perimeter</div>
+            </div>
+
+            <div class="pc">
+              <div class="pc-node">02</div>
+              <div class="pc-title">Regulatory Sources</div>
+              <div class="pc-desc">Supervisory authorities in scope</div>
+            </div>
+
+            <div class="pc">
+              <div class="pc-node">03</div>
+              <div class="pc-title">Regulatory Database</div>
+              <div class="pc-desc">Instruments at article level, classified</div>
+            </div>
+
+            <div class="pc">
+              <div class="pc-node">04</div>
+              <div class="pc-title">Knowledge Graph</div>
+              <div class="pc-desc">Requirements linked across instruments and jurisdictions</div>
+            </div>
+
+            <div class="pc">
+              <div class="pc-node">05</div>
+              <div class="pc-title">Obligation Register</div>
+              <div class="pc-desc">What the regulation requires. How the institution complies.</div>
+            </div>
+
+            <div class="pc">
+              <div class="pc-node">06</div>
+              <div class="pc-title">Compliance Workbench</div>
+              <div class="pc-desc">Role-based prefilled checklists. Advisory output.</div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ─── Differentiators ─── -->
+      <section class="s-tinted">
+        <div class="spine">
+          <h2>The platform characteristics</h2>
+          <p class="section-sub">Three properties that existing regulatory data products do not provide simultaneously.</p>
+          <div class="diff-grid">
+
+            <div class="dc">
+              <h4>Complete regulatory picture</h4>
+              <p>
+                All requirements bearing on a matter — traversed across
+                instruments and levels in a single pass. No requirement is
+                missed because a source was not manually identified.
+              </p>
+            </div>
+
+            <div class="dc">
+              <h4>Advisory output</h4>
+              <p>
+                <span class="wm">Obliga<em>I</em></span> surfaces what
+                regulations say and presents candidate requirements for review.
+                Compliance determinations remain with the institution's
+                compliance function and legal counsel.
+              </p>
+            </div>
+
+            <div class="dc">
+              <h4>Full provenance</h4>
+              <p>
+                Every checklist item traces to a specific article in a
+                specific instrument at a specific level of the regulatory
+                hierarchy. The audit trail is built in, not assembled after
+                the fact.
+              </p>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ─── Founder + Current status ─── -->
+      <section class="s-tinted">
+        <div class="spine">
+          <h2>The founder &amp; current status</h2>
+          <p class="section-sub">Who built it and where it stands today.</p>
+          <div class="diff-grid" style="grid-template-columns:1fr 1fr;">
+
+            <div class="dc">
+              <h4>The founder</h4>
+              <div class="badge-row" style="margin-bottom:12px;">
+                <span class="badge">RegTech</span>
+              </div>
+              <p>
+                Dirard Mikdad founded <span class="wm">Obliga<em>I</em></span> in 2026.
+                He spent nineteen years in regulatory intelligence — at Rabobank and
+                Deloitte in the Netherlands, and at PwC UK. At Deloitte he designed
+                and built RegMiner, one of the first regulatory data analytics platforms
+                in the market, in 2019. He has worked directly with compliance and risk
+                functions at major financial institutions across the EU and the UK.
+              </p>
+            </div>
+
+            <div class="dc">
+              <h4>Current status</h4>
+              <div class="badge-row" style="margin-bottom:12px;">
+                <span class="badge">Prototype</span>
+              </div>
+              <p>
+                A working prototype demonstrating the full six-layer architecture
+                across two institutions — a Colombian universal bank operating across
+                Colombia, Panama, Peru, the United States, and the EU; and a Dutch
+                wholesale bank operating across the Netherlands, the EU, and the
+                United States. The extraction pipeline is under active development.
+              </p>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
     </main>
+
+    <!-- ─── Footer ─── -->
+    <footer>
+      <div class="spine">
+        <div class="advisory">
+          <p>
+            <strong>Advisory.</strong>
+            <span class="wm">Obliga<em>I</em></span> output is advisory.
+            The platform processes regulatory requirements and translates these
+            into proposed obligations for review. The institution is ultimately
+            responsible to demonstrate compliance to the regulatory supervisory
+            authorities.
+          </p>
+        </div>
+        <div class="footer-ctas">
+          <a href="mailto:info@oblig.ai" class="btn">Get in touch</a>
+          <a href="mailto:founders@oblig.ai" class="btn btn-ghost">For investors</a>
+        </div>
+        <p class="footer-meta">
+          © 2026 <span class="wm">Obliga<em>I</em></span> Inc.
+          &nbsp;·&nbsp; Delaware, United States.
+          &nbsp;·&nbsp; Confidential.
+        </p>
+      </div>
+    </footer>
+
+  <!-- ─── Modal ─── -->
+  <div class="modal-overlay" id="modal" onclick="closeModal()">
+    <button class="modal-close" onclick="closeModal()" aria-label="Close">&times;</button>
+    <img class="modal-img" id="modal-img" src="" alt="" onclick="event.stopPropagation()" />
   </div>
 
-  <footer>
-    <div class="container">
-      <div class="footer-inner">
-        <p class="footer-copy">© 2026 Obliga<em class="brand-i">I</em> Inc. Delaware, United States.</p>
-        <div class="footer-links">
-          <a href="mailto:info@oblig.ai">info@oblig.ai</a>
-          <a href="mailto:dmikdad@oblig.ai">dmikdad@oblig.ai</a>
-        </div>
-      </div>
-    </div>
-  </footer>
+  <script>
+    function openModal(src, alt) {
+      const modal = document.getElementById('modal');
+      const img = document.getElementById('modal-img');
+      img.src = src;
+      img.alt = alt;
+      modal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeModal() {
+      document.getElementById('modal').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeModal();
+    });
+  </script>
 
 </body>
 </html>
