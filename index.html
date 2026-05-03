@@ -85,6 +85,10 @@
         box-shadow:0 2px 8px rgba(0,0,0,0.06),0 8px 32px rgba(0,0,0,0.10);
         transition:transform 200ms ease,box-shadow 200ms ease;
         display:block;
+        background:none;
+        cursor:pointer;
+        text-align:left;
+        width:100%;
       }
       .thumb:hover{
         transform:translateY(-2px);
@@ -315,10 +319,10 @@
           <a href="mailto:founders@oblig.ai" class="btn">Request a pilot</a>
         </div>
 
-        <div class="thumb" onclick="openModal('prototype-obligation.jpg','Obligation Register — active obligations, conflict detection, regulatory provenance')">
+        <button class="thumb" onclick="openModal('prototype-obligation.jpg','Obligation Register — active obligations, conflict detection, regulatory provenance')">
           <img src="prototype-obligation.jpg" alt="ObligaI obligation register" loading="eager" />
           <span class="thumb-hint">Click to expand</span>
-        </div>
+        </button>
       </div>
 
       <!-- ─── The problem ─── -->
@@ -346,7 +350,7 @@
               The regulatory perimeter of an institution is not a flat list.
               It is a graph.
             </p>
-            <div class="thumb"
+            <button class="thumb"
               onclick="openModal('01_two_universes.png',
               'Two Distinct Universes — regulatory universe
               versus institution universe')"
@@ -358,7 +362,7 @@
                 loading="lazy"
               />
               <span class="thumb-hint">Click to expand</span>
-            </div>
+            </button>
           </div>
         </div>
       </section>
@@ -371,10 +375,10 @@
             Six layers: nothing in the pipeline exists independently of the client profile at its root.
           </p>
 
-          <div class="thumb graph" onclick="openModal('knowledge-graph.jpg','Knowledge graph — regulatory relationships and cross-jurisdiction conflict detection')" style="margin:40px 0 56px;max-width:560px;">
+          <button class="thumb graph" onclick="openModal('knowledge-graph.jpg','Knowledge graph — regulatory relationships and cross-jurisdiction conflict detection')" style="margin:40px 0 56px;max-width:560px;">
             <img src="knowledge-graph.jpg" alt="ObligaI knowledge graph" loading="lazy" />
             <span class="thumb-hint">Click to expand</span>
-          </div>
+          </button>
 
           <div class="pipeline">
 
@@ -492,7 +496,7 @@
                 wholesale bank operating across the Netherlands, the EU, and the
                 United States. The extraction pipeline is under active development.
               </p>
-              <div class="thumb"
+              <button class="thumb"
                 onclick="openModal('08_feasibility_go_nogo.png',
                 'Feasibility criteria — validation benchmark
                 for the extraction pipeline')"
@@ -504,7 +508,7 @@
                   loading="lazy"
                 />
                 <span class="thumb-hint">Click to expand</span>
-              </div>
+              </button>
             </div>
 
           </div>
