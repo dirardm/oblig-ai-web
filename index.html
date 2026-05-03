@@ -65,8 +65,6 @@
       .btn:hover{background:var(--accent);color:var(--text-inverse);transform:translateY(-1px);box-shadow:0 4px 12px rgba(184,92,58,0.35)}
       .btn:active{background:var(--accent-active);color:var(--text-inverse);transform:translateY(0);box-shadow:none}
       .btn:focus-visible{outline:2px solid var(--focus-ring);outline-offset:2px}
-      .btn-ghost{border-color:transparent;color:var(--text-secondary)}
-      .btn-ghost:hover{border-color:var(--accent);background:var(--accent);color:var(--text-inverse)}
 
       /* ─── Hero ─── */
       .hero{max-width:var(--max);margin:0 auto;padding:88px var(--pad) 80px;display:grid;grid-template-columns:1fr 1.4fr;gap:64px;align-items:center}
@@ -237,7 +235,6 @@
 
       /* ─── Differentiator cards ─── */
       .diff-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:40px}
-      .diff-2col{grid-template-columns:1fr 1fr}
       .dc{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:24px;transition:background 200ms ease-out,border-color 200ms ease-out,transform 200ms ease-out,box-shadow 200ms ease-out}
       .dc:hover{background:var(--surface);border-color:var(--border-hover);transform:translateY(-2px);box-shadow:0 8px 24px rgba(184,92,58,0.18)}
       .dc h4{font:700 11px/1 var(--font);letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
@@ -272,15 +269,13 @@
       }
       @media(max-width:680px){
         :root{--pad:24px}
-        nav{padding:16px var(--pad);flex-wrap:wrap;gap:12px}
+        nav{padding:16px var(--pad)}
         h1{font-size:24px}
         .diff-grid{grid-template-columns:1fr}
-        .diff-2col{grid-template-columns:1fr}
         .hero{padding:56px var(--pad) 48px}
         .lk svg{width:32px;height:29px}
         .lk-wm{font-size:11px}
         .pipeline{grid-template-columns:repeat(2,1fr);gap:24px}
-        .pc::after{display:none}
       }
     </style>
   </head>
@@ -455,7 +450,7 @@
         <div class="spine">
           <h2>The founder &amp; current status</h2>
           <p class="section-sub">Who built it and where it stands today.</p>
-          <div class="diff-grid diff-2col">
+          <div class="diff-grid" style="grid-template-columns:1fr 1fr;">
 
             <div class="dc">
               <h4>The founder</h4>
@@ -507,7 +502,7 @@
         </div>
         <div class="footer-ctas">
           <a href="mailto:info@oblig.ai" class="btn">Get in touch</a>
-          <a href="mailto:founders@oblig.ai" class="btn btn-ghost">For investors</a>
+          <a href="mailto:founders@oblig.ai" class="btn">For investors</a>
         </div>
         <p class="footer-meta">
           © 2026 <span class="wm">Obliga<em>I</em></span> Inc.
