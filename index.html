@@ -87,8 +87,10 @@
         display:block;
         background:none;
         cursor:pointer;
+        padding:0;
         text-align:left;
         width:100%;
+        -webkit-appearance:none;
       }
       .thumb:hover{
         transform:translateY(-2px);
@@ -543,22 +545,36 @@
     </footer>
 
   <!-- ─── Modal ─── -->
-  <div class="modal-overlay" id="modal" onclick="closeModal()">
-    <button class="modal-close" onclick="closeModal()" aria-label="Close">&times;</button>
-    <img class="modal-img" id="modal-img" src="" alt="" onclick="event.stopPropagation()" />
+  <div id="modal"
+    style="display:none;position:fixed;inset:0;
+    background:rgba(0,0,0,0.88);z-index:1000;
+    align-items:center;justify-content:center;
+    padding:32px;cursor:zoom-out;"
+    onclick="closeModal()">
+    <button
+      style="position:fixed;top:20px;right:24px;
+      background:none;border:none;color:#fff;
+      font-size:28px;cursor:pointer;opacity:0.7;"
+      onclick="closeModal()">&#x2715;</button>
+    <img id="modal-img" src="" alt=""
+      style="max-width:100%;max-height:90vh;
+      display:block;border-radius:2px;
+      box-shadow:0 32px 80px rgba(0,0,0,0.60);
+      cursor:default;"
+      onclick="event.stopPropagation()"/>
   </div>
 
   <script>
     function openModal(src, alt) {
-      const modal = document.getElementById('modal');
-      const img = document.getElementById('modal-img');
+      var modal = document.getElementById('modal');
+      var img = document.getElementById('modal-img');
       img.src = src;
       img.alt = alt;
-      modal.classList.add('open');
+      modal.style.display = 'flex';
       document.body.style.overflow = 'hidden';
     }
     function closeModal() {
-      document.getElementById('modal').classList.remove('open');
+      document.getElementById('modal').style.display = 'none';
       document.body.style.overflow = '';
     }
     document.addEventListener('keydown', function(e) {
