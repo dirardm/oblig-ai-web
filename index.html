@@ -65,6 +65,7 @@
       .btn:hover{background:var(--accent);color:var(--text-inverse);transform:translateY(-1px);box-shadow:0 4px 12px rgba(184,92,58,0.35)}
       .btn:active{background:var(--accent-active);color:var(--text-inverse);transform:translateY(0);box-shadow:none}
       .btn:focus-visible{outline:2px solid var(--focus-ring);outline-offset:2px}
+      .btn-secondary:hover{background:transparent;color:var(--accent-active);border-color:var(--accent-active);box-shadow:0 4px 12px rgba(184,92,58,0.18)}
 
       /* ─── Hero ─── */
       .hero{max-width:var(--max);margin:0 auto;padding:88px var(--pad) 80px;display:grid;grid-template-columns:1fr 1.4fr;gap:64px;align-items:center}
@@ -326,7 +327,7 @@
         <span class="lk-wm">Obliga<em>I</em></span>
       </a>
       <div style="display:flex;align-items:center;gap:16px;">
-        <a href="/platform" style="font:700 11px/1 var(--font);letter-spacing:1.5px;text-transform:uppercase;text-decoration:none;color:#b85c3a;padding:8px 0;white-space:nowrap;transition:opacity 150ms ease-out;" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">Platform</a>
+        <a href="/platform" class="btn btn-secondary">Platform</a>
         <a href="mailto:info@oblig.ai" class="btn">Get in touch</a>
       </div>
     </nav>
