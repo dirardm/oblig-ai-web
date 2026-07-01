@@ -1,3 +1,6 @@
 {
-  "cleanUrls": true
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/probs-in-rust/:path*", "destination": "https://app-l5u15mhth-dirard-mikdads-projects.vercel.app/:path*" }
+  ]
 }
