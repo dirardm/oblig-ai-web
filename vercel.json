@@ -1,5 +1,8 @@
 {
   "cleanUrls": true,
+  "redirects": [
+    { "source": "/asean-manifest-viewer", "destination": "/asean-manifest-viewer/", "permanent": true }
+  ],
   "rewrites": [
     { "source": "/probs-in-rust/:path*", "destination": "https://app-theta-silk-80.vercel.app/:path*" },
     { "source": "/assets/:name-:hash.:ext", "destination": "https://app-theta-silk-80.vercel.app/assets/:name-:hash.:ext" }
