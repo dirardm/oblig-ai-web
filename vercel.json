@@ -2,6 +2,6 @@
   "cleanUrls": true,
   "rewrites": [
     { "source": "/probs-in-rust/:path*", "destination": "https://app-theta-silk-80.vercel.app/:path*" },
-    { "source": "/assets/index-:hash", "destination": "https://app-theta-silk-80.vercel.app/assets/index-:hash" }
+    { "source": "/assets/:name-:hash.:ext", "destination": "https://app-theta-silk-80.vercel.app/assets/:name-:hash.:ext" }
   ]
 }
