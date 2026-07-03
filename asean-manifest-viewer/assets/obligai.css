@@ -1,0 +1,3875 @@
+/* =============================================================
+   ObligaI — Design System Stylesheet
+   ----------------------------------------------------------------
+   Single source of truth for all ObligaI styling. Covers tokens,
+   base components, utilities, regulation-specific patterns and
+   layout chrome. Applies to product, marketing and presentation.
+
+   Import this file once. No other ObligaI stylesheet is needed.
+
+   Conventions
+       •  British English throughout.
+       •  All colours expressed as CSS custom properties — never
+          hard-coded hex except inside the regulation registry.
+       •  2px radius everywhere except buttons (0px, rectangular).
+       •  Sienna #B85C3A is mode-invariant. Status, surface and
+          text tokens switch via [data-theme="dark"].
+
+   Table of contents
+       0.  Foundations             — colour tokens, type, spacing, base components
+       1.  Design tokens           — motion, sizing, shadows, z-index
+       2.  Regulation registry     — 6 current + 10 placeholders
+       3.  Jurisdictions           — regional groupings
+       4.  Logo & wordmark         — sizing system + lockups
+       5.  Layout primitives       — container, grid, flex, gap
+       6.  Typography helpers      — t-* + regulation-coloured text
+       7.  Spacing utilities       — m-/p-/gap- on the 8px scale
+       8.  Cards                   — base, compact, elevated, reg
+       9.  Buttons                 — size modifiers, layout
+      10.  Tables                  — compact, zebra, numeric
+      11.  Badges, tags, status    — registry + status badges
+      12.  Forms                   — input, select, checkbox, radio
+      13.  Regulation components   — label, card, jurisdiction sect.
+      14.  Charts & graphs         — D3 / Reagraph utilities
+      15.  Completeness & scores   — validation visuals
+      16.  Alerts, tooltips, etc.  — feedback surfaces
+      17.  Theme overrides         — dark + per-regulation themes
+      18.  Accessibility           — focus, disabled, errors
+      19.  Responsive design       — 640 / 1200 / 1600 breakpoints
+      20.  Print                   — slide & document hand-offs
+      21.  Interactive hover       — tags, alerts, nav-item polish
+      22.  Scoping patterns        — scope-bar, combobox, scope-pills
+      23.  Icons                   — outline-stroke utility
+      24.  Spinner & skeleton      — loading states
+      24b. Flags                   — jurisdiction marker sprite
+      25.  Empty state             — zero-data surface
+      26.  Pagination
+      27.  Sidebar, top bar & shell — app chrome layout
+     [EXT] Dense table fixes      — executive summary overrides
+============================================================= */
+
+
+/* =============================================================
+   0.  FOUNDATIONS — colour tokens, type, spacing, base components
+   ============================================================= */
+:root,
+[data-theme="light"] {
+  /* ---------- Sienna ramp (mode-invariant) ---------- */
+  --sienna-100: #F0D4C8;
+  --sienna-200: #E8C4B0;
+  --sienna-300: #D48870;
+  --sienna-400: #C67255;
+  --sienna-500: #B85C3A;   /* primary brand */
+  --sienna-600: #AC5234;
+  --sienna-700: #9A4830;
+  --sienna-900: #7A3520;
+  --accent:        var(--sienna-500);
+  --accent-hover:  var(--sienna-600);
+  --accent-active: var(--sienna-700);
+
+  /* ---------- Surfaces ---------- */
+  --page-bg:          #FAF7F4;
+  --surface:          #FFFFFF;
+  --surface-high:     #F5F0EB;
+  --surface-overlay:  #EDE8E2;
+  --surface-input:    #FFFFFF;
+
+  /* ---------- Tints / borders ---------- */
+  --accent-faint:     rgba(184, 92, 58, 0.08);
+  --accent-border:    rgba(184, 92, 58, 0.28);
+  --border:           rgba(184, 92, 58, 0.12);
+  --border-hover:     rgba(184, 92, 58, 0.28);
+  --border-focus:     #B85C3A;
+  --border-error:     #C83030;
+  --divider:          rgba(184, 92, 58, 0.10);
+  --scrollbar-thumb:  rgba(184, 92, 58, 0.25);
+  --scrollbar-hover:  rgba(184, 92, 58, 0.38);
+  --focus-ring:       #B85C3A;
+  --overlay-scrim:    rgba(15, 15, 15, 0.50);
+
+  /* ---------- Text ---------- */
+  --text-primary:    #0F0F0F;
+  --text-secondary:  #5A5248;
+  --text-muted:      #8A7E75;
+  --text-disabled:   rgba(15, 15, 15, 0.30);
+  --text-inverse:    #F8F8F8;
+
+  /* ---------- Status ---------- */
+  --status-active:       #3B6D11;
+  --status-conflicted:   #C83030;
+  --status-implementing: #185FA5;
+  --status-pending:      #C9A84C;
+  --status-inactive:     #8A7E75;
+
+  --status-active-bg:       rgba(59, 109, 17, 0.08);
+  --status-conflicted-bg:   rgba(200, 48, 48, 0.08);
+  --status-implementing-bg: rgba(24, 95, 165, 0.08);
+  --status-pending-bg:      rgba(201, 168, 76, 0.10);
+
+  /* ---------- Skeleton ---------- */
+  --skeleton-base:    rgba(184, 92, 58, 0.08);
+  --skeleton-shimmer: rgba(184, 92, 58, 0.14);
+}
+
+[data-theme="dark"] {
+  --page-bg:          #080808;
+  --surface:          #111111;
+  --surface-high:     #161616;
+  --surface-overlay:  #1E1E1E;
+  --surface-input:    #161616;
+
+  --accent-faint:     rgba(184, 92, 58, 0.12);
+  --accent-border:    rgba(184, 92, 58, 0.35);
+  --border:           rgba(248, 248, 248, 0.08);
+  --border-hover:     rgba(248, 248, 248, 0.24);
+  --divider:          rgba(248, 248, 248, 0.08);
+  --scrollbar-thumb:  rgba(248, 248, 248, 0.12);
+  --scrollbar-hover:  rgba(248, 248, 248, 0.24);
+  --overlay-scrim:    rgba(0, 0, 0, 0.70);
+
+  --text-primary:     #F8F8F8;
+  --text-secondary:   #C8C0B8;
+  --text-muted:       #8A7E75;
+  --text-disabled:    rgba(248, 248, 248, 0.28);
+  --text-inverse:     #0F0F0F;
+
+  --status-active:       #7AC04A;
+  --status-conflicted:   #FF6B6B;
+  --status-implementing: #6BB0F0;
+  --status-pending:      #E8C870;
+  --status-inactive:     #9A938C;
+  --border-error:        #FF6B6B;
+
+  --status-active-bg:       rgba(122, 192, 74, 0.14);
+  --status-conflicted-bg:   rgba(255, 107, 107, 0.14);
+  --status-implementing-bg: rgba(107, 176, 240, 0.14);
+  --status-pending-bg:      rgba(232, 200, 112, 0.14);
+
+  --skeleton-base:    rgba(248, 248, 248, 0.06);
+  --skeleton-shimmer: rgba(248, 248, 248, 0.10);
+}
+
+/* ---------- Type families ---------- */
+:root {
+  --font-sans:   "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  --font-italic: Georgia, "Times New Roman", serif;
+  --font-mono:   "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+
+  --radius:      2px;
+  --radius-btn:  0px;
+
+  --space-1: 4px;  --space-2: 8px;  --space-3: 12px; --space-4: 16px;
+  --space-6: 24px; --space-8: 32px; --space-12: 48px; --space-16: 64px;
+  --space-24: 96px; --space-32: 128px;
+
+  --shadow-popover:
+      0 0 0 1px rgba(184, 92, 58, 0.10),
+      0 12px 32px -12px rgba(15, 15, 15, 0.22);
+
+  --z-base:        0;
+  --z-raised:     10;
+  --z-sticky:    100;
+  --z-overlay:   500;
+  --z-modal:    1000;
+}
+
+/* ---------- Type scale ---------- */
+.t-display  { font: 700 48px/1.15 var(--font-sans); letter-spacing: -0.5px; color: var(--text-primary); }
+.t-h1       { font: 700 34px/1.20 var(--font-sans); letter-spacing: -0.3px; color: var(--text-primary); }
+.t-h2       { font: 700 24px/1.30 var(--font-sans); color: var(--text-primary); }
+.t-h3       { font: 700 18px/1.40 var(--font-sans); color: var(--text-primary); }
+.t-h4       { font: 700 15px/1.40 var(--font-sans); color: var(--text-primary); }
+.t-body     { font: 400 14px/1.60 var(--font-sans); color: var(--text-secondary); }
+.t-small    { font: 400 12px/1.50 var(--font-sans); color: var(--text-secondary); }
+.t-caption  { font: 400 11px/1.40 var(--font-sans); color: var(--text-muted); }
+.t-label    { font: 700 10px/1.00 var(--font-sans); letter-spacing: 2.5px; text-transform: uppercase; color: var(--text-muted); }
+.t-mono       { font: 400 13px/1.50 var(--font-mono); color: var(--text-primary); }
+.t-mono-small { font: 400 12px/1.50 var(--font-mono); color: var(--text-secondary); }
+
+/* ---------- Wordmark ---------- */
+.wordmark {
+  font: 500 1em/1 var(--font-sans);
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+  white-space: nowrap;
+  text-transform: none;
+}
+.wordmark > i {
+  font: italic 700 1em/1 var(--font-italic);
+  color: var(--accent);
+  margin-left: -0.04em;
+  font-style: italic;
+}
+.wordmark--sm { font-size: 13px; }
+.wordmark--md { font-size: 15px; }
+
+/* ---------- Page reset ---------- */
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--page-bg);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+* { box-sizing: border-box; }
+
+/* ---------- Buttons (translucent fill, glow, lift — at rest) ---------- */
+/* Resting state IS the rich state: semi-transparent fill, soft glow, 1px lift.
+   Hover deepens the translucency and intensifies the glow with a 2px lift.
+   Active collapses the lift and goes solid. */
+.btn {
+  position: relative;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  font: 700 12px/1 var(--font-sans);
+  letter-spacing: 1.5px; text-transform: uppercase;
+  padding: 14px 20px; min-height: 40px;
+  border-radius: var(--radius-btn);
+  border: 1px solid transparent;
+  cursor: pointer; user-select: none;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  background: transparent;
+  color: var(--accent);
+  transform: translateY(-1px);
+  transition:
+    background 180ms ease-out,
+    border-color 180ms ease-out,
+    color 180ms ease-out,
+    transform 180ms ease-out,
+    box-shadow 220ms ease-out;
+}
+.btn:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 3px; }
+
+/* Primary — translucent sienna fill at rest, glow + lift baked in */
+.btn-primary {
+  background: rgba(184,92,58,0.18);
+  border-color: rgba(184,92,58,0.55);
+  color: var(--accent);
+  box-shadow:
+    0 0 0 1px rgba(184,92,58,0.10),
+    0 4px 16px -4px rgba(184,92,58,0.40),
+    inset 0 1px 0 rgba(255,255,255,0.25);
+}
+.btn-primary:hover {
+  background: rgba(184,92,58,0.32);
+  border-color: var(--accent);
+  color: var(--accent-hover);
+  transform: translateY(-2px);
+  box-shadow:
+    0 0 0 1px rgba(184,92,58,0.25),
+    0 10px 28px -6px rgba(184,92,58,0.65),
+    inset 0 1px 0 rgba(255,255,255,0.30);
+}
+.btn-primary:active {
+  background: var(--accent); color: #FFF; border-color: var(--accent);
+  transform: translateY(0);
+  box-shadow: 0 0 0 1px rgba(184,92,58,0.30), 0 2px 8px -2px rgba(184,92,58,0.50);
+}
+.btn-primary:disabled {
+  background: rgba(184,92,58,0.06); border-color: rgba(184,92,58,0.18);
+  color: rgba(184,92,58,0.38); cursor: not-allowed; transform: none; box-shadow: none;
+}
+[data-theme="dark"] .btn-primary {
+  background: rgba(184,92,58,0.22);
+  border-color: rgba(216,120,84,0.55);
+  color: var(--sienna-300);
+  box-shadow:
+    0 0 0 1px rgba(184,92,58,0.18),
+    0 4px 18px -4px rgba(184,92,58,0.55),
+    inset 0 1px 0 rgba(255,255,255,0.06);
+}
+[data-theme="dark"] .btn-primary:hover {
+  background: rgba(184,92,58,0.40);
+  border-color: var(--sienna-400);
+  color: #FFE8DC;
+  box-shadow:
+    0 0 0 1px rgba(184,92,58,0.35),
+    0 12px 32px -6px rgba(184,92,58,0.80),
+    inset 0 1px 0 rgba(255,255,255,0.08);
+}
+
+/* Secondary — translucent neutral fill at rest, sienna text */
+.btn-secondary {
+  background: rgba(40,32,28,0.06);
+  border-color: var(--accent-border);
+  color: var(--accent);
+  box-shadow:
+    0 0 0 1px rgba(184,92,58,0.06),
+    0 3px 12px -3px rgba(40,32,28,0.18),
+    inset 0 1px 0 rgba(255,255,255,0.30);
+}
+.btn-secondary:hover {
+  background: rgba(40,32,28,0.14);
+  border-color: rgba(184,92,58,0.45);
+  color: var(--accent-hover);
+  transform: translateY(-2px);
+  box-shadow:
+    0 0 0 1px rgba(184,92,58,0.14),
+    0 8px 22px -4px rgba(184,92,58,0.30),
+    inset 0 1px 0 rgba(255,255,255,0.35);
+}
+.btn-secondary:active { transform: translateY(0); background: rgba(40,32,28,0.22); }
+.btn-secondary:disabled {
+  background: transparent;
+  border-color: rgba(184,92,58,0.12); color: rgba(184,92,58,0.30);
+  cursor: not-allowed; transform: none; box-shadow: none;
+}
+[data-theme="dark"] .btn-secondary {
+  background: rgba(255,247,240,0.04);
+  border-color: rgba(184,92,58,0.35);
+  color: var(--sienna-300);
+  box-shadow:
+    0 0 0 1px rgba(184,92,58,0.10),
+    0 3px 14px -3px rgba(0,0,0,0.40),
+    inset 0 1px 0 rgba(255,255,255,0.04);
+}
+[data-theme="dark"] .btn-secondary:hover {
+  background: rgba(255,247,240,0.10);
+  border-color: rgba(216,120,84,0.55);
+  color: #F0D4C8;
+  box-shadow:
+    0 0 0 1px rgba(184,92,58,0.22),
+    0 10px 26px -5px rgba(184,92,58,0.40),
+    inset 0 1px 0 rgba(255,255,255,0.06);
+}
+
+/* Ghost — barely-there translucent wash at rest */
+.btn-ghost {
+  background: rgba(184,92,58,0.06);
+  border-color: transparent;
+  color: var(--accent);
+  box-shadow: 0 2px 8px -3px rgba(184,92,58,0.18);
+  text-transform: none;
+  letter-spacing: normal;
+}
+.btn-ghost:hover {
+  background: rgba(184,92,58,0.16);
+  color: var(--accent-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px -4px rgba(184,92,58,0.35);
+}
+.btn-ghost:active { transform: translateY(0); background: rgba(184,92,58,0.24); }
+[data-theme="dark"] .btn-ghost {
+  background: rgba(184,92,58,0.10);
+  color: var(--sienna-300);
+  box-shadow: 0 2px 10px -3px rgba(184,92,58,0.30);
+}
+[data-theme="dark"] .btn-ghost:hover {
+  background: rgba(184,92,58,0.22);
+  color: #F0D4C8;
+  box-shadow: 0 8px 22px -4px rgba(184,92,58,0.50);
+}
+
+/* Destructive — translucent crimson at rest */
+.btn-destructive {
+  background: rgba(200,48,48,0.14);
+  border-color: rgba(200,48,48,0.55);
+  color: #C83030;
+  box-shadow:
+    0 0 0 1px rgba(200,48,48,0.10),
+    0 4px 16px -4px rgba(200,48,48,0.42),
+    inset 0 1px 0 rgba(255,255,255,0.22);
+}
+.btn-destructive:hover {
+  background: rgba(200,48,48,0.30);
+  border-color: #C83030;
+  color: #A82828;
+  transform: translateY(-2px);
+  box-shadow:
+    0 0 0 1px rgba(200,48,48,0.28),
+    0 10px 28px -6px rgba(200,48,48,0.65),
+    inset 0 1px 0 rgba(255,255,255,0.28);
+}
+.btn-destructive:active { background: #C83030; color: #FFF; transform: translateY(0); }
+[data-theme="dark"] .btn-destructive {
+  background: rgba(224,80,80,0.18);
+  border-color: rgba(224,80,80,0.55);
+  color: #E05050;
+  box-shadow:
+    0 0 0 1px rgba(224,80,80,0.18),
+    0 4px 18px -4px rgba(224,80,80,0.55),
+    inset 0 1px 0 rgba(255,255,255,0.06);
+}
+[data-theme="dark"] .btn-destructive:hover {
+  background: rgba(224,80,80,0.36);
+  border-color: #E05050;
+  color: #FFC8C8;
+  box-shadow:
+    0 0 0 1px rgba(224,80,80,0.40),
+    0 12px 32px -6px rgba(224,80,80,0.80),
+    inset 0 1px 0 rgba(255,255,255,0.08);
+}
+
+.btn-icon { width: 40px; height: 40px; padding: 0; }
+@media (prefers-reduced-motion: reduce) {
+  .btn { transition: background 120ms, color 120ms, border-color 120ms; transform: none !important; }
+  .btn:hover { transform: none !important; }
+}
+
+/* ---------- Inputs ---------- */
+.input {
+  height: 40px; padding: 0 14px;
+  font: 400 14px/1 var(--font-sans);
+  background: var(--surface-input);
+  color: var(--text-primary);
+  border: 1px solid var(--accent-border);
+  border-radius: var(--radius);
+  width: 100%;
+  transition: border-color 150ms ease-out;
+}
+.input::placeholder { color: var(--text-muted); }
+.input:hover { border-color: rgba(184,92,58,0.45); }
+[data-theme="dark"] .input:hover { border-color: rgba(248,248,248,0.25); }
+.input:focus { outline: none; border: 1.5px solid var(--accent); padding: 0 13.5px; }
+.input.error { border: 1.5px solid var(--border-error); }
+.input:disabled { background: var(--surface-high); color: var(--text-disabled); cursor: not-allowed; }
+
+.label {
+  display: block; margin-bottom: 6px;
+  font: 700 11px/1 var(--font-sans);
+  letter-spacing: 2px; text-transform: uppercase;
+  color: var(--text-secondary);
+}
+[data-theme="dark"] .label { color: var(--text-secondary); }
+.helper { margin-top: 6px; font: 400 11px/1.4 var(--font-sans); color: var(--text-muted); }
+.helper.error { color: var(--border-error); }
+
+/* ---------- Cards ----------
+   TRANSLUCENT at rest (45% opacity + 2px backdrop blur). Hover lifts to SOLID
+   surface + 2px transform + sienna glow — reads as "plucked off the surface."
+   No shadow at rest. Spring easing. */
+.card {
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  border: 1px solid rgba(184,92,58,0.55);
+  border-radius: var(--radius);
+  padding: 24px;
+  transform: translateY(0) scale(1);
+  transform-origin: center;
+  will-change: transform, background, box-shadow;
+  transition:
+    background 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 380ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 260ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.card:hover {
+  background: var(--surface);
+  border-color: var(--accent);
+  transform: translateY(-3px) scale(1.008);
+  box-shadow:
+    0 0 0 1px rgba(184,92,58,0.10),
+    0 16px 32px -10px rgba(184,92,58,0.22);
+}
+.card:active { transform: translateY(-1px) scale(0.998); transition-duration: 120ms; }
+.card.selected {
+  background: rgba(184, 92, 58, 0.14);
+  border: 1.5px solid var(--accent);
+  padding: 23.5px;
+  transform: translateY(-2px) scale(1.006);
+  box-shadow:
+    0 0 0 1px rgba(184,92,58,0.20),
+    0 12px 28px -10px rgba(184,92,58,0.32);
+}
+.card.selected:hover {
+  background: rgba(184, 92, 58, 0.18);
+  transform: translateY(-4px) scale(1.012);
+  box-shadow:
+    0 0 0 1px rgba(184,92,58,0.26),
+    0 20px 40px -12px rgba(184,92,58,0.38);
+}
+[data-theme="dark"] .card {
+  background: rgba(17, 17, 17, 0.45);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  border-color: rgba(216,120,84,0.55);
+}
+[data-theme="dark"] .card:hover {
+  background: var(--surface);
+  border-color: var(--sienna-400);
+  box-shadow:
+    0 0 0 1px rgba(184,92,58,0.18),
+    0 16px 36px -10px rgba(184,92,58,0.30);
+}
+[data-theme="dark"] .card.selected {
+  background: rgba(184, 92, 58, 0.18);
+  border-color: var(--accent);
+  box-shadow:
+    0 0 0 1px rgba(184,92,58,0.28),
+    0 12px 32px -10px rgba(184,92,58,0.38);
+}
+[data-theme="dark"] .card.selected:hover {
+  background: rgba(184, 92, 58, 0.24);
+  box-shadow:
+    0 0 0 1px rgba(184,92,58,0.34),
+    0 20px 44px -12px rgba(184,92,58,0.46);
+}
+@media (prefers-reduced-motion: reduce) {
+  .card { transition: background 140ms, border-color 140ms; transform: none !important; }
+  .card:hover { transform: none !important; }
+}
+
+/* ---------- Status badge ---------- */
+.badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  font: 700 11px/1 var(--font-sans);
+  letter-spacing: 1px; text-transform: uppercase;
+}
+.badge::before {
+  content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor;
+}
+.badge-active       { color: var(--status-active); }
+.badge-conflicted   { color: var(--status-conflicted); }
+.badge-implementing { color: var(--status-implementing); }
+.badge-pending      { color: var(--status-pending); }
+.badge-inactive     { color: var(--status-inactive); }
+
+.badge-bg {
+  padding: 4px 10px; border-radius: var(--radius);
+}
+.badge-bg.badge-active       { background: var(--status-active-bg); }
+.badge-bg.badge-conflicted   { background: var(--status-conflicted-bg); }
+.badge-bg.badge-implementing { background: var(--status-implementing-bg); }
+.badge-bg.badge-pending      { background: var(--status-pending-bg); }
+
+/* ---------- Tags ---------- */
+.tag {
+  display: inline-flex; align-items: center;
+  height: 22px; padding: 0 10px;
+  font: 700 10px/1 var(--font-sans);
+  letter-spacing: 1.5px; text-transform: uppercase;
+  border-radius: var(--radius);
+  border: 1px solid transparent;
+}
+.tag-jurisdiction { background: var(--sienna-100); color: var(--sienna-700); }
+[data-theme="dark"] .tag-jurisdiction { background: rgba(184,92,58,0.18); color: var(--sienna-300); }
+.tag-framework { background: var(--accent-faint); color: var(--accent); border-color: var(--accent-border); }
+[data-theme="dark"] .tag-framework { color: var(--sienna-300); }
+.tag-domain { background: rgba(15, 60, 110, 0.10); color: #0F3C6E; border-color: rgba(15, 60, 110, 0.18); }
+[data-theme="dark"] .tag-domain { background: rgba(122, 176, 240, 0.14); color: #9CC4F0; border-color: rgba(122, 176, 240, 0.30); }
+
+/* ---------- Divider ---------- */
+.divider { height: 1px; background: var(--divider); border: none; margin: 0; }
+
+/* ---------- Eyebrow ---------- */
+.eyebrow {
+  font: 700 10px/1 var(--font-sans);
+  letter-spacing: 3px; text-transform: uppercase;
+  color: var(--accent);
+}
+
+/* ---------- Mono / code ---------- */
+.code-inline {
+  font: 400 13px/1.4 var(--font-mono);
+  background: var(--surface-high);
+  color: var(--text-primary);
+  padding: 4px 6px;
+}
+.code-block {
+  font: 400 13px/1.5 var(--font-mono);
+  background: var(--surface-high);
+  color: var(--text-primary);
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  white-space: pre;
+  overflow-x: auto;
+}
+
+/* ---------- Regulation identity colours ----------
+   Mode-invariant. Applied as per-regulation accents in graph and switcher UI.
+   All six are the sole approved uses of non-sienna colour in the product.
+
+   IRL / CFEN  #C0622F  warm orange
+   LCR         #0d3b66  navy
+   NSFR        #62a87c  sage green
+   ALMM        #7B5EA7  EXCEPTION: purple is prohibited in general UI.
+                        #7B5EA7 is approved exclusively as the ALMM regulation-
+                        identity colour. Do not use purple anywhere else.
+   Perú SBS    #C2273E  crimson
+   Panamá SBP  #003087  royal blue */
+
+
+/* ---------- On-regulation text ----------
+   White text on any regulation-identity background.
+   Mode-invariant — regulation backgrounds are always dark enough for white. */
+:root {
+  --on-regulation: #ffffff;
+}
+
+
+/* =============================================================
+   1.  DESIGN TOKENS — extensions to §0
+   ============================================================= */
+:root {
+  /* ----- Motion ----- */
+  --transition-micro:  150ms ease-out;            /* hover, focus, toggle */
+  --transition-base:   300ms ease-out;            /* card lift, generic   */
+  --transition-panel:  250ms ease-out;            /* panel open / close   */
+  --transition-page:   400ms ease-out;            /* page transition      */
+  --easing-spring:     cubic-bezier(0.34, 1.56, 0.64, 1);
+  --easing-smooth:     cubic-bezier(0.22, 1.00, 0.36, 1);
+
+  /* ----- Sizing — logos (lockup WIDTH, not mark height) ----- */
+  --logo-xs:    32px;   /* favicon, square icon — mark-only fallback */
+  --logo-sm:    80px;   /* nav bar, footer, inline brand */
+  --logo-md:   120px;   /* card / panel header */
+  --logo-lg:   160px;   /* slide header */
+  --logo-xl:   240px;   /* hero on marketing */
+  --logo-2xl:  320px;   /* full hero, splash */
+
+  /* ----- Sizing — layout ----- */
+  --sidebar-w:        240px;
+  --topbar-h:          56px;
+  --content-max:     1200px;
+  --page-pad:          48px;
+  --section-gap:       48px;
+  --touch-min:         40px;
+
+  /* ----- Breakpoints (for use in calc() / clamp()) ----- */
+  --bp-mobile:        640px;
+  --bp-desktop:      1200px;
+  --bp-wide:         1600px;
+
+  /* ----- Shadows — used sparingly, never at rest on resting components ----- */
+  --shadow-card-hover-light:
+      0 0 0 1px rgba(184, 92, 58, 0.10),
+      0 16px 32px -10px rgba(184, 92, 58, 0.22);
+  --shadow-card-hover-dark:
+      0 0 0 1px rgba(184, 92, 58, 0.18),
+      0 16px 36px -10px rgba(184, 92, 58, 0.30);
+  --shadow-popover:
+      0 0 0 1px rgba(184, 92, 58, 0.10),
+      0 12px 32px -12px rgba(15, 15, 15, 0.22);
+  --shadow-modal:
+      0 24px 64px -16px rgba(15, 15, 15, 0.28);
+
+  /* ----- Z-index scale ----- */
+  --z-base:        0;
+  --z-raised:     10;
+  --z-sticky:    100;
+  --z-overlay:   500;
+  --z-modal:    1000;
+  --z-toast:    2000;
+  --z-tooltip:  3000;
+}
+
+
+/* =============================================================
+   2.  REGULATION COLOUR REGISTRY
+   -------------------------------------------------------------
+   Each regulation provides three tokens:
+       --color-{reg}         primary, used for headers, charts,
+                             graph nodes, jurisdiction strips
+       --color-{reg}-light   8% tint, used for badge backgrounds
+       --color-{reg}-dark    dark-mode lift, used inside
+                             [data-theme="dark"]
+
+   To add a new jurisdiction:
+       1.  Append a primary, light and dark token here.
+       2.  Append the same triplet under [data-theme="dark"]
+           (only the -dark token needs a brighter value).
+       3.  Append a `.badge--{reg}`, `.chart-bar--{reg}`,
+           `.graph-node--{reg}` and `.regulation-card--{reg}`
+           rule. No other CSS changes required.
+
+   Note: sienna remains the brand. Regulation colours are used
+   only for data-encoding (charts, graphs, badges, strips), not
+   for chrome.
+   ============================================================= */
+:root,
+[data-theme="light"] {
+  /* ----- Current 6 regulations ----- */
+  --color-lcr:           #0D3B66;  /* EU — Liquidity Coverage Ratio              */
+  --color-lcr-light:     rgba(13,  59, 102, 0.10);
+  --color-lcr-dark:      #6EB3F7;
+
+  --color-nsfr:          #62A87C;  /* EU — Net Stable Funding Ratio              */
+  --color-nsfr-light:    rgba(98, 168, 124, 0.12);
+  --color-nsfr-dark:     #8FD0A6;
+
+  --color-almm:          #7B5EA7;  /* EU — Additional Liquidity Monitoring Metrics */
+  --color-almm-light:    rgba(123,  94, 167, 0.10);
+  --color-almm-dark:     #B098D6;
+
+  --color-irl:           #C0622F;  /* LatAm — Internal Liquidity Reporting       */
+  --color-irl-light:     rgba(192,  98,  47, 0.10);
+  --color-irl-dark:      #E48854;
+
+  --color-peru:          #C2273E;  /* LatAm — Peru SBS                           */
+  --color-peru-light:    rgba(194,  39,  62, 0.10);
+  --color-peru-dark:     #E45464;
+
+  --color-panama:        #003087;  /* LatAm — Panama SBP                         */
+  --color-panama-light:  rgba(  0,  48, 135, 0.10);
+  --color-panama-dark:   #71A1F4;
+
+  /* ----- Future regulations — 10 placeholders ----- */
+  --color-uk-fra:           #1E3A8A;  /* UK — PRA Fundamental Rules / FCA        */
+  --color-uk-fra-light:     rgba( 30,  58, 138, 0.10);
+  --color-uk-fra-dark:      #6182CC;
+
+  --color-japan-bsr:        #BC002D;  /* Japan — BOJ Basel Standard Ratio        */
+  --color-japan-bsr-light:  rgba(188,   0,  45, 0.10);
+  --color-japan-bsr-dark:   #E3475F;
+
+  --color-singapore-mas:    #DF0024;  /* Singapore — MAS Notice 649              */
+  --color-singapore-mas-light: rgba(223, 0, 36, 0.10);
+  --color-singapore-mas-dark:  #F25067;
+
+  --color-us-fed:           #1C355E;  /* US — Federal Reserve Reg YY / LCR US    */
+  --color-us-fed-light:     rgba( 28,  53,  94, 0.10);
+  --color-us-fed-dark:      #7CA3D9;
+
+  --color-canada-osfi:      #D52B1E;  /* Canada — OSFI LAR                       */
+  --color-canada-osfi-light: rgba(213, 43, 30, 0.10);
+  --color-canada-osfi-dark:  #ED5C50;
+
+  --color-australia-apra:   #006A4E;  /* Australia — APRA APS 210                */
+  --color-australia-apra-light: rgba(0, 106, 78, 0.10);
+  --color-australia-apra-dark:  #3FA181;
+
+  --color-switzerland-finma:#DA291C;  /* Switzerland — FINMA LCR                 */
+  --color-switzerland-finma-light: rgba(218, 41, 28, 0.10);
+  --color-switzerland-finma-dark:  #ED5C50;
+
+  --color-hongkong-hkma:    #BB133E;  /* Hong Kong — HKMA LM-2                   */
+  --color-hongkong-hkma-light: rgba(187, 19, 62, 0.10);
+  --color-hongkong-hkma-dark:  #E14868;
+
+  --color-mexico-cnbv:      #006847;  /* Mexico — CNBV CCL                       */
+  --color-mexico-cnbv-light: rgba(0, 104, 71, 0.10);
+  --color-mexico-cnbv-dark:  #389C7B;
+
+  --color-brazil-bcb:       #009C3B;  /* Brazil — BCB LCR Resolution             */
+  --color-brazil-bcb-light: rgba(0, 156, 59, 0.10);
+  --color-brazil-bcb-dark:  #3FC36F;
+
+  --color-indonesia-ojk:        #CD1126;  /* Indonesia — OJK liquidity */
+  --color-indonesia-ojk-light:  rgba(205, 17, 38, 0.10);
+  --color-indonesia-ojk-dark:   #EE4E5F;
+
+  --color-malaysia-bnm:         #010066;  /* Malaysia — BNM LCR Framework */
+  --color-malaysia-bnm-light:   rgba(1, 0, 102, 0.10);
+  --color-malaysia-bnm-dark:    #5A5DC4;
+
+  --color-vietnam-sbv:          #DA251D;  /* Vietnam — SBV Circular 22/2019 */
+  --color-vietnam-sbv-light:    rgba(218, 37, 29, 0.10);
+  --color-vietnam-sbv-dark:     #EE5550;
+
+  --color-thailand-bot:         #2D2A4A;  /* Thailand — BOT Liquidity Notification */
+  --color-thailand-bot-light:   rgba(45, 42, 74, 0.10);
+  --color-thailand-bot-dark:    #6E6BA0;
+}
+
+[data-theme="dark"] {
+  /* Lift every primary to its -dark stop so text and borders remain legible on dark surfaces.
+     Tint opacity raised to 0.25; blues pushed to S:65-70% (from ~47%) to avoid washed-out appearance. */
+  --color-lcr:                  #6EB3F7;
+  --color-nsfr:                 #8FD0A6;
+  --color-almm:                 #B098D6;
+  --color-irl:                  #E48854;
+  --color-peru:                 #E45464;
+  --color-panama:               #71A1F4;
+  --color-uk-fra:               #6182CC;
+  --color-japan-bsr:            #E3475F;
+  --color-singapore-mas:        #F25067;
+  --color-us-fed:               #7CA3D9;
+  --color-canada-osfi:          #ED5C50;
+  --color-australia-apra:       #3FA181;
+  --color-switzerland-finma:    #ED5C50;
+  --color-hongkong-hkma:        #E14868;
+  --color-mexico-cnbv:          #389C7B;
+  --color-brazil-bcb:           #3FC36F;
+  --color-indonesia-ojk:        #EE4E5F;
+  --color-malaysia-bnm:         #5A5DC4;
+  --color-vietnam-sbv:          #EE5550;
+  --color-thailand-bot:         #6E6BA0;
+
+  --color-lcr-light:               rgba(110, 179, 247, 0.25);
+  --color-nsfr-light:              rgba(143, 208, 166, 0.25);
+  --color-almm-light:              rgba(176, 152, 214, 0.25);
+  --color-irl-light:               rgba(228, 136,  84, 0.25);
+  --color-peru-light:              rgba(228,  84, 100, 0.25);
+  --color-panama-light:            rgba(113, 161, 244, 0.25);
+  --color-uk-fra-light:            rgba( 97, 130, 204, 0.25);
+  --color-japan-bsr-light:         rgba(227,  71,  95, 0.25);
+  --color-singapore-mas-light:     rgba(242,  80, 103, 0.25);
+  --color-us-fed-light:            rgba(124, 163, 217, 0.25);
+  --color-canada-osfi-light:       rgba(237,  92,  80, 0.25);
+  --color-australia-apra-light:    rgba( 63, 161, 129, 0.25);
+  --color-switzerland-finma-light: rgba(237,  92,  80, 0.25);
+  --color-hongkong-hkma-light:     rgba(225,  72, 104, 0.25);
+  --color-mexico-cnbv-light:       rgba( 56, 156, 123, 0.25);
+  --color-brazil-bcb-light:        rgba( 63, 195, 111, 0.25);
+  --color-indonesia-ojk-light:     rgba(238,  78,  95, 0.25);
+  --color-malaysia-bnm-light:      rgba( 90,  93, 196, 0.25);
+  --color-vietnam-sbv-light:       rgba(238,  85,  80, 0.25);
+  --color-thailand-bot-light:      rgba(110, 107, 160, 0.25);
+}
+
+
+/* =============================================================
+   3.  JURISDICTIONS — regional groupings + per-country aliases
+   -------------------------------------------------------------
+   A jurisdiction is a collection of related regulations. Tokens
+   here let a section header, sidebar group or filter chip take
+   on a region-level identity without coupling to a single
+   regulation. New regions append here.
+
+   COLOUR DERIVATION RULE
+       Each jurisdiction colour aliases the colour of its primary
+       regulation — we never hardcode a separate hex for the
+       jurisdiction. So when a regulation colour changes, every
+       surface that keys off the jurisdiction tracks it.
+
+   STRUCTURE
+       Regional groupings (eu, latam, uk, asia, namer, emea)
+       are used for slide eyebrows and sidebar grouping.
+       Per-country aliases (juris-eu, juris-uk, juris-us…) are
+       used by the combined scoping control so each chip can
+       reflect its national colour when active.
+   ============================================================= */
+:root {
+  --jurisdiction-eu:              "eu";
+  --jurisdiction-latam:           "latam";
+  --jurisdiction-uk-ireland:      "uk";
+  --jurisdiction-asia-pacific:    "asia";
+  --jurisdiction-north-america:   "namer";
+  --jurisdiction-emea-ex-eu:      "emea";
+
+  /* ----- Regional groupings ----- */
+  --color-eu:          var(--color-lcr);              /* EU regulation cluster */
+  --color-eu-light:    var(--color-lcr-light);
+  --color-latam:       var(--color-irl);              /* LatAm regulation cluster */
+  --color-latam-light: var(--color-irl-light);
+  --color-uk:          var(--color-uk-fra);
+  --color-uk-light:    var(--color-uk-fra-light);
+  --color-asia:        var(--color-hongkong-hkma);
+  --color-asia-light:  var(--color-hongkong-hkma-light);
+  --color-namer:       var(--color-us-fed);
+  --color-namer-light: var(--color-us-fed-light);
+  --color-emea:        var(--color-switzerland-finma);
+  --color-emea-light:  var(--color-switzerland-finma-light);
+
+  /* ----- Per-country aliases — used by the combined scoping control.
+     For single-regulation countries the alias is identical to the
+     regulation's colour; for multi-regulation jurisdictions (EU)
+     we pick the flagship regulation. */
+  --color-juris-eu:       var(--color-lcr);
+  --color-juris-uk:       var(--color-uk-fra);
+  --color-juris-us:       var(--color-us-fed);
+  --color-juris-ca:       var(--color-canada-osfi);
+  --color-juris-ch:       var(--color-switzerland-finma);
+  --color-juris-pe:       var(--color-peru);
+  --color-juris-pa:       var(--color-panama);
+  --color-juris-mx:       var(--color-mexico-cnbv);
+  --color-juris-br:       var(--color-brazil-bcb);
+  --color-juris-jp:       var(--color-japan-bsr);
+  --color-juris-sg:       var(--color-singapore-mas);
+  --color-juris-hk:       var(--color-hongkong-hkma);
+  --color-juris-au:       var(--color-australia-apra);
+  --color-juris-id:       var(--color-indonesia-ojk);
+  --color-juris-my:       var(--color-malaysia-bnm);
+  --color-juris-vn:       var(--color-vietnam-sbv);
+  --color-juris-th:       var(--color-thailand-bot);
+  --color-juris-internal: var(--color-irl);
+}
+
+
+/* =============================================================
+   4.  LOGO & WORDMARK SYSTEM — single canonical lockup
+   -------------------------------------------------------------
+   The vertical lockup ships as ONE indivisible SVG asset. The
+   designer authored the mark + wordmark together inside a
+   160 × 124 viewBox; proportions, spacing and kerning are
+   baked in. The stylesheet never recomposes them.
+
+   Usage — inline the canonical SVG once and reuse it:
+       <span class="logo logo--lg">
+         <svg viewBox="0 0 160 124">…canonical paths…</svg>
+       </span>
+
+   The class sets the lockup WIDTH. The SVG scales
+   proportionally; the wordmark inside picks up
+   `color: currentColor` so light/dark mode swap automatically.
+
+   FORBIDDEN
+       •  horizontal lockups
+       •  wordmark-only renderings
+       •  re-laying the mark and wordmark with separate elements
+       •  cropping or reflowing the SVG
+   ============================================================= */
+.logo {
+  display: inline-block;
+  line-height: 0;
+  color: var(--text-primary);          /* drives the wordmark text colour */
+  text-decoration: none;
+}
+.logo > svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  color: inherit;
+}
+
+/* Sized variants — each is a lockup WIDTH. The aspect ratio is
+   fixed by the SVG (160 × 124 → height = width × 0.775). */
+.logo--xs   { width: var(--logo-xs);  }
+.logo--sm   { width: var(--logo-sm);  }
+.logo--md   { width: var(--logo-md);  }
+.logo--lg   { width: var(--logo-lg);  }
+.logo--xl   { width: var(--logo-xl);  }
+.logo--2xl  { width: var(--logo-2xl); }
+
+/* Block-link affordance */
+a.logo:hover { color: var(--accent); }
+
+/* Forbidden orientations — legacy markup degrades gracefully */
+.logo--horizontal,
+.logo--wordmark-only {
+  /* Forbidden — these classes are kept only so old markup
+     keeps rendering the canonical vertical lockup. They have
+     no visual effect of their own. */
+}
+
+
+/* =============================================================
+   5.  LAYOUT PRIMITIVES — container, grid, flex, gap
+   ============================================================= */
+.container {
+  width: 100%;
+  max-width: var(--content-max);
+  margin-inline: auto;
+  padding-inline: var(--page-pad);
+}
+.container--narrow {
+  width: 100%;
+  max-width: 800px;
+  margin-inline: auto;
+  padding-inline: var(--page-pad);
+}
+.container--wide   { max-width: 1440px; }
+.container--full   { max-width: none; padding-inline: var(--space-6); }
+
+/* Flex helpers ----------------------------------------------- */
+.flex-row     { display: flex; flex-direction: row; }
+.flex-col     { display: flex; flex-direction: column; }
+.flex-wrap    { flex-wrap: wrap; }
+.flex-center  { display: flex; align-items: center; justify-content: center; }
+.flex-between { display: flex; align-items: center; justify-content: space-between; }
+.flex-around  { display: flex; align-items: center; justify-content: space-around; }
+.flex-start   { display: flex; align-items: center; justify-content: flex-start; }
+.flex-end     { display: flex; align-items: center; justify-content: flex-end; }
+.flex-1       { flex: 1 1 0; }
+.flex-none    { flex: none; }
+
+/* Grid helpers — stack on mobile, opt-in column counts upward */
+.grid    { display: grid; gap: var(--space-4); grid-auto-rows: auto; align-items: start; }
+.grid-1  { display: grid; grid-template-columns: 1fr; gap: var(--space-4); grid-auto-rows: auto; align-items: start; }
+.grid-2  { display: grid; grid-template-columns: 1fr; gap: var(--space-4); grid-auto-rows: auto; align-items: start; }
+.grid-3  { display: grid; grid-template-columns: 1fr; gap: var(--space-4); grid-auto-rows: auto; align-items: start; }
+.grid-4  { display: grid; grid-template-columns: 1fr; gap: var(--space-4); grid-auto-rows: auto; align-items: start; }
+.grid-5  { display: grid; grid-template-columns: 1fr; gap: var(--space-4); grid-auto-rows: auto; align-items: start; }
+.grid-6  { display: grid; grid-template-columns: 1fr; gap: var(--space-4); grid-auto-rows: auto; align-items: start; }
+.grid-auto-sm { display: grid; gap: var(--space-4); grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+.grid-auto-md { display: grid; gap: var(--space-4); grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+.grid-auto-lg { display: grid; gap: var(--space-6); grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); }
+
+
+/* =============================================================
+   6.  TYPOGRAPHY HELPERS
+   -------------------------------------------------------------
+   .t-display, .t-h1...h4, .t-body, .t-small, .t-caption,
+   .t-label and .t-mono are defined in §0.
+   Below: regulation-coloured text classes and weight helpers.
+   ============================================================= */
+.t-strong      { font-weight: 700; }
+.t-medium      { font-weight: 500; }
+.t-italic      { font-style: italic; font-family: var(--font-italic); color: var(--accent); }
+.t-numeric     { font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
+.t-truncate    { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.text-nowrap   { white-space: nowrap; }
+.t-balance     { text-wrap: balance; }
+.t-pretty      { text-wrap: pretty; }
+
+.t-primary     { color: var(--text-primary); }
+.t-secondary   { color: var(--text-secondary); }
+.t-muted       { color: var(--text-muted); }
+.t-inverse     { color: var(--text-inverse); }
+.t-accent      { color: var(--accent); }
+.t-error       { color: var(--border-error); }
+
+/* Regulation-coloured text — used in headlines, in-table chips
+   and slide titles that key off a specific regulation. */
+.t-lcr               { color: var(--color-lcr); }
+.t-nsfr              { color: var(--color-nsfr); }
+.t-almm              { color: var(--color-almm); }
+.t-irl               { color: var(--color-irl); }
+.t-peru              { color: var(--color-peru); }
+.t-panama            { color: var(--color-panama); }
+.t-uk-fra            { color: var(--color-uk-fra); }
+.t-japan-bsr         { color: var(--color-japan-bsr); }
+.t-singapore-mas     { color: var(--color-singapore-mas); }
+.t-us-fed            { color: var(--color-us-fed); }
+.t-canada-osfi       { color: var(--color-canada-osfi); }
+.t-australia-apra    { color: var(--color-australia-apra); }
+.t-switzerland-finma { color: var(--color-switzerland-finma); }
+.t-hongkong-hkma     { color: var(--color-hongkong-hkma); }
+.t-mexico-cnbv       { color: var(--color-mexico-cnbv); }
+.t-brazil-bcb        { color: var(--color-brazil-bcb); }
+.t-indonesia-ojk     { color: var(--color-indonesia-ojk); }
+.t-malaysia-bnm      { color: var(--color-malaysia-bnm); }
+.t-vietnam-sbv       { color: var(--color-vietnam-sbv); }
+.t-thailand-bot      { color: var(--color-thailand-bot); }
+
+[data-theme="dark"] .t-lcr               { color: var(--color-lcr-dark); }
+[data-theme="dark"] .t-nsfr              { color: var(--color-nsfr-dark); }
+[data-theme="dark"] .t-almm              { color: var(--color-almm-dark); }
+[data-theme="dark"] .t-irl               { color: var(--color-irl-dark); }
+[data-theme="dark"] .t-peru              { color: var(--color-peru-dark); }
+[data-theme="dark"] .t-panama            { color: var(--color-panama-dark); }
+[data-theme="dark"] .t-uk-fra            { color: var(--color-uk-fra-dark); }
+[data-theme="dark"] .t-japan-bsr         { color: var(--color-japan-bsr-dark); }
+[data-theme="dark"] .t-singapore-mas     { color: var(--color-singapore-mas-dark); }
+[data-theme="dark"] .t-us-fed            { color: var(--color-us-fed-dark); }
+[data-theme="dark"] .t-canada-osfi       { color: var(--color-canada-osfi-dark); }
+[data-theme="dark"] .t-australia-apra    { color: var(--color-australia-apra-dark); }
+[data-theme="dark"] .t-switzerland-finma { color: var(--color-switzerland-finma-dark); }
+[data-theme="dark"] .t-hongkong-hkma     { color: var(--color-hongkong-hkma-dark); }
+[data-theme="dark"] .t-mexico-cnbv       { color: var(--color-mexico-cnbv-dark); }
+[data-theme="dark"] .t-brazil-bcb        { color: var(--color-brazil-bcb-dark); }
+[data-theme="dark"] .t-indonesia-ojk     { color: var(--color-indonesia-ojk-dark); }
+[data-theme="dark"] .t-malaysia-bnm      { color: var(--color-malaysia-bnm-dark); }
+[data-theme="dark"] .t-vietnam-sbv       { color: var(--color-vietnam-sbv-dark); }
+[data-theme="dark"] .t-thailand-bot      { color: var(--color-thailand-bot-dark); }
+
+[data-theme="dark"] .t-lcr,
+[data-theme="dark"] .t-nsfr,
+[data-theme="dark"] .t-almm,
+[data-theme="dark"] .t-irl,
+[data-theme="dark"] .t-peru,
+[data-theme="dark"] .t-panama,
+[data-theme="dark"] .t-uk-fra,
+[data-theme="dark"] .t-japan-bsr,
+[data-theme="dark"] .t-singapore-mas,
+[data-theme="dark"] .t-us-fed,
+[data-theme="dark"] .t-canada-osfi,
+[data-theme="dark"] .t-australia-apra,
+[data-theme="dark"] .t-switzerland-finma,
+[data-theme="dark"] .t-hongkong-hkma,
+[data-theme="dark"] .t-mexico-cnbv,
+[data-theme="dark"] .t-brazil-bcb,
+[data-theme="dark"] .t-indonesia-ojk,
+[data-theme="dark"] .t-malaysia-bnm,
+[data-theme="dark"] .t-vietnam-sbv,
+[data-theme="dark"] .t-thailand-bot { text-shadow: 0 0 6px currentColor; }
+
+[data-theme="dark"] .t-lcr:hover,
+[data-theme="dark"] .t-nsfr:hover,
+[data-theme="dark"] .t-almm:hover,
+[data-theme="dark"] .t-irl:hover,
+[data-theme="dark"] .t-peru:hover,
+[data-theme="dark"] .t-panama:hover,
+[data-theme="dark"] .t-uk-fra:hover,
+[data-theme="dark"] .t-japan-bsr:hover,
+[data-theme="dark"] .t-singapore-mas:hover,
+[data-theme="dark"] .t-us-fed:hover,
+[data-theme="dark"] .t-canada-osfi:hover,
+[data-theme="dark"] .t-australia-apra:hover,
+[data-theme="dark"] .t-switzerland-finma:hover,
+[data-theme="dark"] .t-hongkong-hkma:hover,
+[data-theme="dark"] .t-mexico-cnbv:hover,
+[data-theme="dark"] .t-brazil-bcb:hover,
+[data-theme="dark"] .t-indonesia-ojk:hover,
+[data-theme="dark"] .t-malaysia-bnm:hover,
+[data-theme="dark"] .t-vietnam-sbv:hover,
+[data-theme="dark"] .t-thailand-bot:hover { text-shadow: 0 0 16px currentColor; }
+
+
+/* =============================================================
+   7.  SPACING UTILITIES — 8px scale, matches tokens
+   -------------------------------------------------------------
+   Numbers map to §0 tokens:
+       0 1 2 3 4 6 8 12 16 24 32   →   0 4 8 12 16 24 32 48 64 96 128 px
+   ============================================================= */
+
+/* Margin all sides */
+.m-0  { margin: 0; }
+.m-1  { margin: var(--space-1); }
+.m-2  { margin: var(--space-2); }
+.m-3  { margin: var(--space-3); }
+.m-4  { margin: var(--space-4); }
+.m-6  { margin: var(--space-6); }
+.m-8  { margin: var(--space-8); }
+.m-12 { margin: var(--space-12); }
+.m-16 { margin: var(--space-16); }
+.m-auto { margin: auto; }
+
+/* Margin top / bottom / left / right */
+.mt-0 { margin-top: 0; } .mt-1 { margin-top: var(--space-1); } .mt-2 { margin-top: var(--space-2); } .mt-3 { margin-top: var(--space-3); } .mt-4 { margin-top: var(--space-4); } .mt-6 { margin-top: var(--space-6); } .mt-8 { margin-top: var(--space-8); } .mt-12 { margin-top: var(--space-12); } .mt-16 { margin-top: var(--space-16); }
+.mb-0 { margin-bottom: 0; } .mb-1 { margin-bottom: var(--space-1); } .mb-2 { margin-bottom: var(--space-2); } .mb-3 { margin-bottom: var(--space-3); } .mb-4 { margin-bottom: var(--space-4); } .mb-6 { margin-bottom: var(--space-6); } .mb-8 { margin-bottom: var(--space-8); } .mb-12 { margin-bottom: var(--space-12); } .mb-16 { margin-bottom: var(--space-16); }
+.ml-0 { margin-left: 0; } .ml-1 { margin-left: var(--space-1); } .ml-2 { margin-left: var(--space-2); } .ml-3 { margin-left: var(--space-3); } .ml-4 { margin-left: var(--space-4); } .ml-6 { margin-left: var(--space-6); } .ml-8 { margin-left: var(--space-8); } .ml-auto { margin-left: auto; }
+.mr-0 { margin-right: 0; } .mr-1 { margin-right: var(--space-1); } .mr-2 { margin-right: var(--space-2); } .mr-3 { margin-right: var(--space-3); } .mr-4 { margin-right: var(--space-4); } .mr-6 { margin-right: var(--space-6); } .mr-8 { margin-right: var(--space-8); } .mr-auto { margin-right: auto; }
+.mx-auto { margin-inline: auto; }
+.my-auto { margin-block: auto; }
+
+/* Padding */
+.p-0  { padding: 0; }
+.p-1  { padding: var(--space-1); }
+.p-2  { padding: var(--space-2); }
+.p-3  { padding: var(--space-3); }
+.p-4  { padding: var(--space-4); }
+.p-6  { padding: var(--space-6); }
+.p-8  { padding: var(--space-8); }
+.p-12 { padding: var(--space-12); }
+
+.pt-0 { padding-top: 0; } .pt-1 { padding-top: var(--space-1); } .pt-2 { padding-top: var(--space-2); } .pt-3 { padding-top: var(--space-3); } .pt-4 { padding-top: var(--space-4); } .pt-6 { padding-top: var(--space-6); } .pt-8 { padding-top: var(--space-8); } .pt-12 { padding-top: var(--space-12); }
+.pb-0 { padding-bottom: 0; } .pb-1 { padding-bottom: var(--space-1); } .pb-2 { padding-bottom: var(--space-2); } .pb-3 { padding-bottom: var(--space-3); } .pb-4 { padding-bottom: var(--space-4); } .pb-6 { padding-bottom: var(--space-6); } .pb-8 { padding-bottom: var(--space-8); } .pb-12 { padding-bottom: var(--space-12); }
+.pl-0 { padding-left: 0; } .pl-1 { padding-left: var(--space-1); } .pl-2 { padding-left: var(--space-2); } .pl-3 { padding-left: var(--space-3); } .pl-4 { padding-left: var(--space-4); } .pl-6 { padding-left: var(--space-6); } .pl-8 { padding-left: var(--space-8); }
+.pr-0 { padding-right: 0; } .pr-1 { padding-right: var(--space-1); } .pr-2 { padding-right: var(--space-2); } .pr-3 { padding-right: var(--space-3); } .pr-4 { padding-right: var(--space-4); } .pr-6 { padding-right: var(--space-6); } .pr-8 { padding-right: var(--space-8); }
+.px-2 { padding-inline: var(--space-2); }
+.px-3 { padding-inline: var(--space-3); }
+.px-4 { padding-inline: var(--space-4); }
+.px-6 { padding-inline: var(--space-6); }
+.py-2 { padding-block: var(--space-2); }
+.py-3 { padding-block: var(--space-3); }
+.py-4 { padding-block: var(--space-4); }
+.py-6 { padding-block: var(--space-6); }
+
+/* Gap — works for flex and grid */
+.gap-0  { gap: 0; }
+.gap-1  { gap: var(--space-1); }
+.gap-2  { gap: var(--space-2); }
+.gap-3  { gap: var(--space-3); }
+.gap-4  { gap: var(--space-4); }
+.gap-6  { gap: var(--space-6); }
+.gap-8  { gap: var(--space-8); }
+.gap-12 { gap: var(--space-12); }
+
+
+/* =============================================================
+   8.  CARDS — extends `.card` from §0
+   ============================================================= */
+
+/* The base .card class is defined in §0. The
+   variants below are additive and assume `class="card card--..."`. */
+
+.card--compact {
+  padding: var(--space-3);
+}
+.card--roomy {
+  padding: var(--space-8);
+}
+.card--flat {
+  box-shadow: none;
+  background: var(--surface);
+}
+.card--flat:hover {
+  box-shadow: none;
+  transform: none;
+}
+.card--elevated {
+  box-shadow:
+    0 1px 2px rgba(20, 14, 10, 0.05),
+    0 12px 28px -10px rgba(20, 14, 10, 0.18);
+}
+[data-theme="dark"] .card--elevated {
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.45),
+    0 14px 36px -12px rgba(0, 0, 0, 0.65);
+}
+.card--interactive { cursor: pointer; }
+.card--bordered    { border-width: 1.5px; }
+.card--stat        { padding: var(--space-6); }
+.card--stat .stat-num {
+  font: 700 48px/1 var(--font-sans);
+  letter-spacing: -1px;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+.card--stat .stat-label {
+  font: 700 10px/1 var(--font-sans);
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-top: var(--space-3);
+}
+
+/* Regulation card — a card whose top strip and selected border
+   key off the regulation's primary colour. The chrome stays
+   sienna; the regulation colour is used only as a data signal. */
+.regulation-card {
+  position: relative;
+  padding: var(--space-6);
+  padding-top: calc(var(--space-6) + 4px); /* room for the strip */
+}
+.regulation-card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--reg-color, var(--accent));
+  transition: height var(--transition-base), box-shadow var(--transition-base);
+}
+.regulation-card:hover::before {
+  height: 5px;
+  box-shadow: 0 6px 18px -6px var(--reg-color, var(--accent));
+}
+.regulation-card .regulation-card__id {
+  font: 400 11px/1 var(--font-mono);
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+}
+.regulation-card .regulation-card__title {
+  font: 700 18px/1.3 var(--font-sans);
+  color: var(--text-primary);
+  margin-top: var(--space-2);
+}
+
+.regulation-card--lcr               { --reg-color: var(--color-lcr); }
+.regulation-card--nsfr              { --reg-color: var(--color-nsfr); }
+.regulation-card--almm              { --reg-color: var(--color-almm); }
+.regulation-card--irl               { --reg-color: var(--color-irl); }
+.regulation-card--peru              { --reg-color: var(--color-peru); }
+.regulation-card--panama            { --reg-color: var(--color-panama); }
+.regulation-card--uk-fra            { --reg-color: var(--color-uk-fra); }
+.regulation-card--japan-bsr         { --reg-color: var(--color-japan-bsr); }
+.regulation-card--singapore-mas     { --reg-color: var(--color-singapore-mas); }
+.regulation-card--us-fed            { --reg-color: var(--color-us-fed); }
+.regulation-card--canada-osfi       { --reg-color: var(--color-canada-osfi); }
+.regulation-card--australia-apra    { --reg-color: var(--color-australia-apra); }
+.regulation-card--switzerland-finma { --reg-color: var(--color-switzerland-finma); }
+.regulation-card--hongkong-hkma     { --reg-color: var(--color-hongkong-hkma); }
+.regulation-card--mexico-cnbv       { --reg-color: var(--color-mexico-cnbv); }
+.regulation-card--brazil-bcb        { --reg-color: var(--color-brazil-bcb); }
+.regulation-card--indonesia-ojk     { --reg-color: var(--color-indonesia-ojk); }
+.regulation-card--malaysia-bnm      { --reg-color: var(--color-malaysia-bnm); }
+.regulation-card--vietnam-sbv       { --reg-color: var(--color-vietnam-sbv); }
+.regulation-card--thailand-bot      { --reg-color: var(--color-thailand-bot); }
+
+
+/* =============================================================
+   9.  BUTTONS — size and layout modifiers
+   -------------------------------------------------------------
+   Base .btn, .btn-primary, .btn-secondary, .btn-ghost,
+   .btn-destructive and .btn-icon are defined in §0.
+   These modifiers tune size and layout without changing fill.
+   ============================================================= */
+.btn--size-sm {
+  font-size: 11px;
+  padding: 10px 14px;
+  min-height: 32px;
+  letter-spacing: 1.25px;
+}
+.btn--size-md { /* default — matches base .btn */ }
+.btn--size-lg {
+  font-size: 13px;
+  padding: 18px 28px;
+  min-height: 52px;
+  letter-spacing: 1.75px;
+}
+.btn--block  { width: 100%; }
+.btn--group  {
+  display: inline-flex;
+  gap: 0;
+}
+.btn--group > .btn { border-radius: 0; }
+.btn--group > .btn + .btn { margin-left: -1px; } /* avoid double borders */
+
+
+/* =============================================================
+   10.  TABLES
+   ============================================================= */
+.table-wrap {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  overflow: auto;
+}
+.table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font: 400 13px/1.5 var(--font-sans);
+  color: var(--text-primary);
+  background: transparent;
+}
+.table caption {
+  text-align: left;
+  padding: var(--space-4) var(--space-4) var(--space-3);
+  font: 700 13px/1.4 var(--font-sans);
+  color: var(--text-primary);
+  background: var(--surface-high);
+  border-bottom: 1px solid var(--divider);
+  caption-side: top;
+}
+[data-theme="dark"] .table caption {
+  background: rgba(0, 0, 0, 0.25);
+}
+.table-header {
+  background: var(--surface);
+}
+.table-header th,
+.table th {
+  font: 700 11px/1 var(--font-sans);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  text-align: left;
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--divider);
+  position: sticky;
+  top: 0;
+  background: var(--surface);
+  z-index: var(--z-raised);
+}
+.table-row,
+.table tbody tr {
+  background: var(--surface);
+  transition: background var(--transition-micro), box-shadow var(--transition-micro);
+  cursor: pointer;
+}
+.table-row:hover,
+.table tbody tr:hover {
+  background: rgba(184, 92, 58, 0.12);
+}
+.table tbody tr:hover td {
+  background: rgba(184, 92, 58, 0.12);
+}
+[data-theme="dark"] .table-row:hover,
+[data-theme="dark"] .table tbody tr:hover {
+  background: rgba(248, 248, 248, 0.08);
+}
+[data-theme="dark"] .table tbody tr:hover td {
+  background: rgba(248, 248, 248, 0.08);
+}
+.table-row--selected,
+.table tbody tr.is-selected {
+  background: rgba(184, 92, 58, 0.08);
+  box-shadow: inset 2px 0 0 var(--accent);
+}
+[data-theme="dark"] .table tbody tr.is-selected {
+  background: rgba(184, 92, 58, 0.12);
+}
+.table-cell,
+.table td {
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid rgba(184, 92, 58, 0.08);
+  vertical-align: middle;
+  background: var(--surface);
+}
+[data-theme="dark"] .table td {
+  border-bottom-color: rgba(248, 248, 248, 0.06);
+}
+.table-cell--numeric,
+.table td.numeric {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+.table-cell--mono,
+.table td.mono {
+  font: 400 12px/1.4 var(--font-mono);
+  color: var(--text-secondary);
+}
+
+.table--compact th,
+.table--compact td { padding: var(--space-2) var(--space-3); }
+
+.table--zebra tbody tr:nth-child(odd) {
+  background: rgba(184, 92, 58, 0.025);
+}
+[data-theme="dark"] .table--zebra tbody tr:nth-child(odd) {
+  background: rgba(248, 248, 248, 0.02);
+}
+
+.table--bordered td,
+.table--bordered th {
+  border-right: 1px solid var(--divider);
+}
+.table--bordered td:last-child,
+.table--bordered th:last-child {
+  border-right: none;
+}
+
+
+/* =============================================================
+   11.  BADGES, TAGS, STATUS
+   -------------------------------------------------------------
+   Base .badge / .badge-bg / .tag are in §0.
+   Regulation badges, status pills and granular status modifiers
+   live here.
+   ============================================================= */
+
+/* ----- Regulation badge — coloured pill with dot + label ----- */
+.badge--regulation {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 22px;
+  padding: 0 10px;
+  border-radius: var(--radius);
+  font: 700 10px/1 var(--font-sans);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--reg-color, var(--accent));
+  background: var(--reg-light, var(--accent-faint));
+  border: 1px solid transparent;
+  transition:
+    background var(--transition-micro),
+    border-color var(--transition-micro),
+    transform var(--transition-micro),
+    box-shadow var(--transition-micro);
+}
+.badge--regulation::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+.badge--regulation:hover {
+  border-color: color-mix(in oklab, var(--reg-color, var(--accent)) 35%, transparent);
+  transform: translateY(-1px);
+}
+a.badge--regulation,
+button.badge--regulation { cursor: pointer; text-decoration: none; }
+.badge--lcr               { --reg-color: var(--color-lcr);               --reg-light: var(--color-lcr-light); }
+.badge--nsfr              { --reg-color: var(--color-nsfr);              --reg-light: var(--color-nsfr-light); }
+.badge--almm              { --reg-color: var(--color-almm);              --reg-light: var(--color-almm-light); }
+.badge--irl               { --reg-color: var(--color-irl);               --reg-light: var(--color-irl-light); }
+.badge--peru              { --reg-color: var(--color-peru);              --reg-light: var(--color-peru-light); }
+.badge--panama            { --reg-color: var(--color-panama);            --reg-light: var(--color-panama-light); }
+.badge--uk-fra            { --reg-color: var(--color-uk-fra);            --reg-light: var(--color-uk-fra-light); }
+.badge--japan-bsr         { --reg-color: var(--color-japan-bsr);         --reg-light: var(--color-japan-bsr-light); }
+.badge--singapore-mas     { --reg-color: var(--color-singapore-mas);     --reg-light: var(--color-singapore-mas-light); }
+.badge--us-fed            { --reg-color: var(--color-us-fed);            --reg-light: var(--color-us-fed-light); }
+.badge--canada-osfi       { --reg-color: var(--color-canada-osfi);       --reg-light: var(--color-canada-osfi-light); }
+.badge--australia-apra    { --reg-color: var(--color-australia-apra);    --reg-light: var(--color-australia-apra-light); }
+.badge--switzerland-finma { --reg-color: var(--color-switzerland-finma); --reg-light: var(--color-switzerland-finma-light); }
+.badge--hongkong-hkma     { --reg-color: var(--color-hongkong-hkma);     --reg-light: var(--color-hongkong-hkma-light); }
+.badge--mexico-cnbv       { --reg-color: var(--color-mexico-cnbv);       --reg-light: var(--color-mexico-cnbv-light); }
+.badge--brazil-bcb        { --reg-color: var(--color-brazil-bcb);        --reg-light: var(--color-brazil-bcb-light); }
+.badge--indonesia-ojk     { --reg-color: var(--color-indonesia-ojk);     --reg-light: var(--color-indonesia-ojk-light); }
+.badge--malaysia-bnm      { --reg-color: var(--color-malaysia-bnm);      --reg-light: var(--color-malaysia-bnm-light); }
+.badge--vietnam-sbv       { --reg-color: var(--color-vietnam-sbv);       --reg-light: var(--color-vietnam-sbv-light); }
+.badge--thailand-bot      { --reg-color: var(--color-thailand-bot);      --reg-light: var(--color-thailand-bot-light); }
+
+[data-theme="dark"] .badge--lcr               { --reg-color: var(--color-lcr-dark); }
+[data-theme="dark"] .badge--nsfr              { --reg-color: var(--color-nsfr-dark); }
+[data-theme="dark"] .badge--almm              { --reg-color: var(--color-almm-dark); }
+[data-theme="dark"] .badge--irl               { --reg-color: var(--color-irl-dark); }
+[data-theme="dark"] .badge--peru              { --reg-color: var(--color-peru-dark); }
+[data-theme="dark"] .badge--panama            { --reg-color: var(--color-panama-dark); }
+[data-theme="dark"] .badge--uk-fra            { --reg-color: var(--color-uk-fra-dark); }
+[data-theme="dark"] .badge--japan-bsr         { --reg-color: var(--color-japan-bsr-dark); }
+[data-theme="dark"] .badge--singapore-mas     { --reg-color: var(--color-singapore-mas-dark); }
+[data-theme="dark"] .badge--us-fed            { --reg-color: var(--color-us-fed-dark); }
+[data-theme="dark"] .badge--canada-osfi       { --reg-color: var(--color-canada-osfi-dark); }
+[data-theme="dark"] .badge--australia-apra    { --reg-color: var(--color-australia-apra-dark); }
+[data-theme="dark"] .badge--switzerland-finma { --reg-color: var(--color-switzerland-finma-dark); }
+[data-theme="dark"] .badge--hongkong-hkma     { --reg-color: var(--color-hongkong-hkma-dark); }
+[data-theme="dark"] .badge--mexico-cnbv       { --reg-color: var(--color-mexico-cnbv-dark); }
+[data-theme="dark"] .badge--brazil-bcb        { --reg-color: var(--color-brazil-bcb-dark); }
+[data-theme="dark"] .badge--indonesia-ojk     { --reg-color: var(--color-indonesia-ojk-dark); }
+[data-theme="dark"] .badge--malaysia-bnm      { --reg-color: var(--color-malaysia-bnm-dark); }
+[data-theme="dark"] .badge--vietnam-sbv       { --reg-color: var(--color-vietnam-sbv-dark); }
+[data-theme="dark"] .badge--thailand-bot      { --reg-color: var(--color-thailand-bot-dark); }
+
+/* ----- Status — pill variants on top of base badge ----- */
+.badge--status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 22px;
+  padding: 0 10px;
+  border-radius: var(--radius);
+  font: 700 10px/1 var(--font-sans);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  transition: transform var(--transition-micro), box-shadow var(--transition-micro);
+}
+a.badge--status:hover,
+button.badge--status:hover { transform: translateY(-1px); }
+.badge--status::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+.badge--status-active        { color: var(--status-active);       background: var(--status-active-bg); }
+.badge--status-conflicted    { color: var(--status-conflicted);   background: var(--status-conflicted-bg); }
+.badge--status-implementing  { color: var(--status-implementing); background: var(--status-implementing-bg); }
+.badge--status-pending       { color: var(--status-pending);      background: var(--status-pending-bg); }
+.badge--status-inactive      { color: var(--status-inactive);     background: rgba(138, 126, 117, 0.10); }
+
+/* ----- Validation verdict variants ----- */
+.badge--valid {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 22px;
+  padding: 0 10px;
+  border-radius: var(--radius);
+  font: 700 10px/1 var(--font-sans);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  background: rgba(91, 158, 111, 0.15);
+  color: #3d8a5a;
+  border: 1px solid rgba(91, 158, 111, 0.30);
+}
+.badge--valid::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #3d8a5a;
+}
+[data-theme="dark"] .badge--valid {
+  background: rgba(91, 158, 111, 0.18);
+  color: #7AC04A;
+  border-color: rgba(122, 192, 74, 0.35);
+}
+
+.badge--unknown {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 22px;
+  padding: 0 10px;
+  border-radius: var(--radius);
+  font: 700 10px/1 var(--font-sans);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  background: rgba(184, 92, 58, 0.12);
+  color: #B85C3A;
+  border: 1px solid rgba(184, 92, 58, 0.30);
+}
+.badge--unknown::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #B85C3A;
+}
+[data-theme="dark"] .badge--unknown {
+  background: rgba(184, 92, 58, 0.14);
+  color: #D48870;
+  border-color: rgba(216, 120, 84, 0.35);
+}
+
+.badge--annotated {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 22px;
+  padding: 0 10px;
+  border-radius: var(--radius);
+  font: 700 10px/1 var(--font-sans);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  background: rgba(74, 127, 203, 0.15);
+  color: #2d64b0;
+  border: 1px solid rgba(74, 127, 203, 0.30);
+}
+.badge--annotated::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #2d64b0;
+}
+[data-theme="dark"] .badge--annotated {
+  background: rgba(107, 176, 240, 0.18);
+  color: #6BB0F0;
+  border-color: rgba(107, 176, 240, 0.35);
+}
+
+
+/* =============================================================
+   12.  FORMS — extends `.input` and `.label` from §0
+   ============================================================= */
+
+/* Input wrapper for adornments (search icon, clear button) */
+.input-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.input-group > .input { padding-left: 36px; }
+.input-group__icon {
+  position: absolute;
+  left: 12px;
+  width: 16px;
+  height: 16px;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+/* Native select reset — looks like .input */
+.select {
+  appearance: none;
+  -webkit-appearance: none;
+  height: 40px;
+  padding: 0 36px 0 14px;
+  font: 400 14px/1 var(--font-sans);
+  background-color: var(--surface-input);
+  color: var(--text-primary);
+  border: 1px solid var(--accent-border);
+  border-radius: var(--radius);
+  width: 100%;
+  cursor: pointer;
+  background-image: linear-gradient(45deg, transparent 50%, var(--text-muted) 50%),
+                    linear-gradient(135deg, var(--text-muted) 50%, transparent 50%);
+  background-position: calc(100% - 18px) 18px, calc(100% - 13px) 18px;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+  transition: border-color var(--transition-micro);
+}
+.select:hover  { border-color: rgba(184, 92, 58, 0.45); }
+.select:focus  { outline: none; border: 1.5px solid var(--accent); padding-left: 13.5px; }
+
+/* Textarea — same shape as input, taller */
+.textarea {
+  min-height: 120px;
+  padding: var(--space-3) var(--space-3);
+  font: 400 14px/1.5 var(--font-sans);
+  background: var(--surface-input);
+  color: var(--text-primary);
+  border: 1px solid var(--accent-border);
+  border-radius: var(--radius);
+  width: 100%;
+  resize: vertical;
+  transition: border-color var(--transition-micro);
+}
+.textarea:focus { outline: none; border: 1.5px solid var(--accent); }
+
+/* Checkbox & radio — square / circle */
+.checkbox, .radio {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  background: var(--surface-input);
+  border: 1px solid var(--accent-border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  position: relative;
+  flex: none;
+  transition: background var(--transition-micro), border-color var(--transition-micro);
+}
+.radio { border-radius: 50%; }
+.checkbox:hover, .radio:hover { border-color: var(--accent); }
+.checkbox:checked, .radio:checked {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.checkbox:checked::after {
+  content: "";
+  position: absolute;
+  left: 4px; top: 1px;
+  width: 5px; height: 9px;
+  border-right: 1.75px solid #FFF;
+  border-bottom: 1.75px solid #FFF;
+  transform: rotate(45deg);
+}
+.radio:checked::after {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  background: #FFF;
+  border-radius: 50%;
+}
+
+/* Field — label + control + helper, vertical group */
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field > .helper { color: var(--text-muted); font: 400 11px/1.4 var(--font-sans); }
+.field--error > .input,
+.field--error > .select,
+.field--error > .textarea { border: 1.5px solid var(--border-error); }
+.field--error > .helper   { color: var(--border-error); }
+
+/* Inline check / radio group */
+.check-row { display: inline-flex; align-items: center; gap: var(--space-2); cursor: pointer; }
+.check-row > span { font: 400 13px/1 var(--font-sans); color: var(--text-secondary); }
+
+/* ----- Form Row (Multi-Column Layout) ----- */
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-4);
+}
+
+@media (max-width: 1000px) {
+  .form-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Explicit column counts */
+.form-row--2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+@media (max-width: 1000px) {
+  .form-row--2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.form-row--3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+@media (max-width: 1200px) {
+  .form-row--3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 1000px) {
+  .form-row--3 {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* =============================================================
+   13.  REGULATION-SPECIFIC COMPONENTS
+   ============================================================= */
+
+/* ----- Regulation label — flag glyph + abbreviation + name -----
+   Renders as `<span class="regulation-label regulation-label--lcr">
+   <em>EU</em> LCR <small>Liquidity Coverage Ratio</small></span>` */
+.regulation-label {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  font: 700 12px/1.2 var(--font-sans);
+  color: var(--text-primary);
+  transition: color var(--transition-micro);
+}
+a.regulation-label,
+button.regulation-label { cursor: pointer; text-decoration: none; background: none; border: 0; padding: 0; }
+a.regulation-label:hover,
+button.regulation-label:hover { color: var(--reg-color, var(--accent)); }
+.regulation-label > em {
+  font: 700 9px/1 var(--font-sans);
+  font-style: normal;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--reg-color, var(--accent));
+  padding: 3px 6px;
+  background: var(--reg-light, var(--accent-faint));
+  border-radius: var(--radius);
+  position: relative;
+  top: -1px;
+  transition: background var(--transition-micro), transform var(--transition-micro);
+}
+a.regulation-label:hover > em,
+button.regulation-label:hover > em { transform: translateY(-1px); }
+.regulation-label > small {
+  font: 400 11px/1.2 var(--font-sans);
+  color: var(--text-muted);
+  text-transform: none;
+  letter-spacing: 0;
+}
+.regulation-label--lcr               { --reg-color: var(--color-lcr);               --reg-light: var(--color-lcr-light); }
+.regulation-label--nsfr              { --reg-color: var(--color-nsfr);              --reg-light: var(--color-nsfr-light); }
+.regulation-label--almm              { --reg-color: var(--color-almm);              --reg-light: var(--color-almm-light); }
+.regulation-label--irl               { --reg-color: var(--color-irl);               --reg-light: var(--color-irl-light); }
+.regulation-label--peru              { --reg-color: var(--color-peru);              --reg-light: var(--color-peru-light); }
+.regulation-label--panama            { --reg-color: var(--color-panama);            --reg-light: var(--color-panama-light); }
+.regulation-label--uk-fra            { --reg-color: var(--color-uk-fra);            --reg-light: var(--color-uk-fra-light); }
+.regulation-label--japan-bsr         { --reg-color: var(--color-japan-bsr);         --reg-light: var(--color-japan-bsr-light); }
+.regulation-label--singapore-mas     { --reg-color: var(--color-singapore-mas);     --reg-light: var(--color-singapore-mas-light); }
+.regulation-label--us-fed            { --reg-color: var(--color-us-fed);            --reg-light: var(--color-us-fed-light); }
+.regulation-label--canada-osfi       { --reg-color: var(--color-canada-osfi);       --reg-light: var(--color-canada-osfi-light); }
+.regulation-label--australia-apra    { --reg-color: var(--color-australia-apra);    --reg-light: var(--color-australia-apra-light); }
+.regulation-label--switzerland-finma { --reg-color: var(--color-switzerland-finma); --reg-light: var(--color-switzerland-finma-light); }
+.regulation-label--hongkong-hkma     { --reg-color: var(--color-hongkong-hkma);     --reg-light: var(--color-hongkong-hkma-light); }
+.regulation-label--mexico-cnbv       { --reg-color: var(--color-mexico-cnbv);       --reg-light: var(--color-mexico-cnbv-light); }
+.regulation-label--brazil-bcb        { --reg-color: var(--color-brazil-bcb);        --reg-light: var(--color-brazil-bcb-light); }
+.regulation-label--indonesia-ojk     { --reg-color: var(--color-indonesia-ojk);     --reg-light: var(--color-indonesia-ojk-light); }
+.regulation-label--malaysia-bnm      { --reg-color: var(--color-malaysia-bnm);      --reg-light: var(--color-malaysia-bnm-light); }
+.regulation-label--vietnam-sbv       { --reg-color: var(--color-vietnam-sbv);       --reg-light: var(--color-vietnam-sbv-light); }
+.regulation-label--thailand-bot      { --reg-color: var(--color-thailand-bot);      --reg-light: var(--color-thailand-bot-light); }
+
+/* ----- Jurisdiction section — wraps a block of regulations -----
+   Renders a labelled, lightly-bordered region with a sienna
+   divider above and a region eyebrow. */
+.jurisdiction-section {
+  padding: var(--space-6) 0;
+  border-top: 1px solid var(--divider);
+}
+.jurisdiction-section__head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+.jurisdiction-section__eyebrow {
+  font: 700 10px/1 var(--font-sans);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.jurisdiction-section__title {
+  font: 700 18px/1.3 var(--font-sans);
+  color: var(--text-primary);
+}
+.jurisdiction-section--eu       .jurisdiction-section__eyebrow { color: var(--color-eu); }
+.jurisdiction-section--latam    .jurisdiction-section__eyebrow { color: var(--color-latam); }
+.jurisdiction-section--uk       .jurisdiction-section__eyebrow { color: var(--color-uk); }
+.jurisdiction-section--asia     .jurisdiction-section__eyebrow { color: var(--color-asia); }
+.jurisdiction-section--namer    .jurisdiction-section__eyebrow { color: var(--color-namer); }
+.jurisdiction-section--emea     .jurisdiction-section__eyebrow { color: var(--color-emea); }
+
+[data-theme="dark"] .jurisdiction-section--eu    .jurisdiction-section__eyebrow { color: var(--color-lcr-dark); }
+[data-theme="dark"] .jurisdiction-section--latam .jurisdiction-section__eyebrow { color: var(--color-irl-dark); }
+[data-theme="dark"] .jurisdiction-section--uk    .jurisdiction-section__eyebrow { color: var(--color-uk-fra-dark); }
+[data-theme="dark"] .jurisdiction-section--asia  .jurisdiction-section__eyebrow { color: var(--color-hongkong-hkma-dark); }
+[data-theme="dark"] .jurisdiction-section--namer .jurisdiction-section__eyebrow { color: var(--color-us-fed-dark); }
+[data-theme="dark"] .jurisdiction-section--emea  .jurisdiction-section__eyebrow { color: var(--color-switzerland-finma-dark); }
+
+.jurisdiction-separator {
+  height: 1px;
+  background: var(--accent-border);
+  border: none;
+  margin: var(--space-6) 0;
+}
+
+
+/* =============================================================
+   14.  CHARTS & GRAPHS — D3 / Reagraph utilities
+   ============================================================= */
+.chart-container {
+  position: relative;
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--space-4);
+  /* ResizeObserver friendly — give it a sane default height,
+     consumers override with style="height: …" */
+  min-height: 240px;
+}
+.chart-container--bare { background: transparent; border: none; padding: 0; }
+.chart-scroll          { max-height: 260px; overflow-y: auto; }
+.chart-body            { width: 100%; }
+.key-metrics__value    { color: var(--kpi-color, var(--text-primary)); }
+
+/* Axes, ticks, gridlines — neutralised so data carries colour */
+.chart-axis path,
+.chart-axis line {
+  stroke: var(--divider);
+  shape-rendering: crispEdges;
+}
+.chart-axis text {
+  font: 400 11px/1 var(--font-sans);
+  fill: var(--text-muted);
+}
+.chart-gridline {
+  stroke: var(--divider);
+  stroke-dasharray: 2 3;
+}
+.chart-label {
+  font: 400 11px/1 var(--font-sans);
+  fill: var(--text-secondary);
+}
+.chart-label--strong { font-weight: 700; fill: var(--text-primary); }
+.chart-value {
+  font: 700 13px/1 var(--font-sans);
+  fill: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Bars / lines / areas — drive fill / stroke via regulation
+   modifier; no need to override `currentColor` from JS. */
+.chart-bar  { fill: var(--accent); }
+.chart-line { fill: none; stroke: var(--accent); stroke-width: 2; }
+.chart-area { fill: var(--accent); opacity: 0.16; }
+.chart-dot  { fill: var(--accent); }
+
+.chart-bar--lcr               { fill: var(--color-lcr); }
+.chart-bar--nsfr              { fill: var(--color-nsfr); }
+.chart-bar--almm              { fill: var(--color-almm); }
+.chart-bar--irl               { fill: var(--color-irl); }
+.chart-bar--peru              { fill: var(--color-peru); }
+.chart-bar--panama            { fill: var(--color-panama); }
+.chart-bar--uk-fra            { fill: var(--color-uk-fra); }
+.chart-bar--japan-bsr         { fill: var(--color-japan-bsr); }
+.chart-bar--singapore-mas     { fill: var(--color-singapore-mas); }
+.chart-bar--us-fed            { fill: var(--color-us-fed); }
+.chart-bar--canada-osfi       { fill: var(--color-canada-osfi); }
+.chart-bar--australia-apra    { fill: var(--color-australia-apra); }
+.chart-bar--switzerland-finma { fill: var(--color-switzerland-finma); }
+.chart-bar--hongkong-hkma     { fill: var(--color-hongkong-hkma); }
+.chart-bar--mexico-cnbv       { fill: var(--color-mexico-cnbv); }
+.chart-bar--brazil-bcb        { fill: var(--color-brazil-bcb); }
+.chart-bar--indonesia-ojk     { fill: var(--color-indonesia-ojk); }
+.chart-bar--malaysia-bnm      { fill: var(--color-malaysia-bnm); }
+.chart-bar--vietnam-sbv       { fill: var(--color-vietnam-sbv); }
+.chart-bar--thailand-bot      { fill: var(--color-thailand-bot); }
+
+[data-theme="dark"] .chart-bar--lcr               { fill: var(--color-lcr-dark); }
+[data-theme="dark"] .chart-bar--nsfr              { fill: var(--color-nsfr-dark); }
+[data-theme="dark"] .chart-bar--almm              { fill: var(--color-almm-dark); }
+[data-theme="dark"] .chart-bar--irl               { fill: var(--color-irl-dark); }
+[data-theme="dark"] .chart-bar--peru              { fill: var(--color-peru-dark); }
+[data-theme="dark"] .chart-bar--panama            { fill: var(--color-panama-dark); }
+[data-theme="dark"] .chart-bar--uk-fra            { fill: var(--color-uk-fra-dark); }
+[data-theme="dark"] .chart-bar--japan-bsr         { fill: var(--color-japan-bsr-dark); }
+[data-theme="dark"] .chart-bar--singapore-mas     { fill: var(--color-singapore-mas-dark); }
+[data-theme="dark"] .chart-bar--us-fed            { fill: var(--color-us-fed-dark); }
+[data-theme="dark"] .chart-bar--canada-osfi       { fill: var(--color-canada-osfi-dark); }
+[data-theme="dark"] .chart-bar--australia-apra    { fill: var(--color-australia-apra-dark); }
+[data-theme="dark"] .chart-bar--switzerland-finma { fill: var(--color-switzerland-finma-dark); }
+[data-theme="dark"] .chart-bar--hongkong-hkma     { fill: var(--color-hongkong-hkma-dark); }
+[data-theme="dark"] .chart-bar--mexico-cnbv       { fill: var(--color-mexico-cnbv-dark); }
+[data-theme="dark"] .chart-bar--brazil-bcb        { fill: var(--color-brazil-bcb-dark); }
+[data-theme="dark"] .chart-bar--indonesia-ojk     { fill: var(--color-indonesia-ojk-dark); }
+[data-theme="dark"] .chart-bar--malaysia-bnm      { fill: var(--color-malaysia-bnm-dark); }
+[data-theme="dark"] .chart-bar--vietnam-sbv       { fill: var(--color-vietnam-sbv-dark); }
+[data-theme="dark"] .chart-bar--thailand-bot      { fill: var(--color-thailand-bot-dark); }
+
+/* Tooltip — used by D3 / Recharts overlays */
+.chart-tooltip {
+  position: absolute;
+  pointer-events: none;
+  background: var(--surface);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--space-2) var(--space-3);
+  font: 400 12px/1.4 var(--font-sans);
+  box-shadow: var(--shadow-popover);
+  z-index: var(--z-tooltip);
+}
+.chart-tooltip__label {
+  font: 700 10px/1 var(--font-sans);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+.chart-tooltip__value {
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+}
+
+/* Legend */
+.chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3) var(--space-4);
+  padding: var(--space-3) 0;
+  font: 400 12px/1 var(--font-sans);
+  color: var(--text-secondary);
+}
+.chart-legend__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.chart-legend__swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  background: var(--accent);
+  flex: none;
+}
+
+/* ----- Graph utilities (Reagraph) — colour graph nodes and
+   edges via the same regulation modifiers. Stroke widths are
+   set on the geometry so users can override per zoom level. */
+.graph-canvas {
+  width: 100%;
+  height: 100%;
+  background: var(--page-bg);
+}
+.graph-node {
+  fill: var(--surface);
+  stroke: var(--accent);
+  stroke-width: 1.5;
+}
+.graph-node--filled { fill: var(--accent); }
+.graph-edge {
+  stroke: var(--border-hover);
+  stroke-width: 1;
+}
+.graph-edge--conflict { stroke: var(--status-conflicted); stroke-width: 1.5; }
+.graph-label {
+  font: 700 11px/1 var(--font-sans);
+  fill: var(--text-primary);
+}
+
+.graph-node--lcr               { stroke: var(--color-lcr); }
+.graph-node--nsfr              { stroke: var(--color-nsfr); }
+.graph-node--almm              { stroke: var(--color-almm); }
+.graph-node--irl               { stroke: var(--color-irl); }
+.graph-node--peru              { stroke: var(--color-peru); }
+.graph-node--panama            { stroke: var(--color-panama); }
+.graph-node--uk-fra            { stroke: var(--color-uk-fra); }
+.graph-node--japan-bsr         { stroke: var(--color-japan-bsr); }
+.graph-node--singapore-mas     { stroke: var(--color-singapore-mas); }
+.graph-node--us-fed            { stroke: var(--color-us-fed); }
+.graph-node--canada-osfi       { stroke: var(--color-canada-osfi); }
+.graph-node--australia-apra    { stroke: var(--color-australia-apra); }
+.graph-node--switzerland-finma { stroke: var(--color-switzerland-finma); }
+.graph-node--hongkong-hkma     { stroke: var(--color-hongkong-hkma); }
+.graph-node--mexico-cnbv       { stroke: var(--color-mexico-cnbv); }
+.graph-node--brazil-bcb        { stroke: var(--color-brazil-bcb); }
+.graph-node--indonesia-ojk     { stroke: var(--color-indonesia-ojk); }
+.graph-node--malaysia-bnm      { stroke: var(--color-malaysia-bnm); }
+.graph-node--vietnam-sbv       { stroke: var(--color-vietnam-sbv); }
+.graph-node--thailand-bot      { stroke: var(--color-thailand-bot); }
+
+/* Dark-mode lift — each regulation's primary stays the same in both
+   modes (it's a data colour), but on dark surfaces strokes need
+   brightening for legibility. */
+[data-theme="dark"] .graph-node--lcr               { stroke: var(--color-lcr-dark); }
+[data-theme="dark"] .graph-node--nsfr              { stroke: var(--color-nsfr-dark); }
+[data-theme="dark"] .graph-node--almm              { stroke: var(--color-almm-dark); }
+[data-theme="dark"] .graph-node--irl               { stroke: var(--color-irl-dark); }
+[data-theme="dark"] .graph-node--peru              { stroke: var(--color-peru-dark); }
+[data-theme="dark"] .graph-node--panama            { stroke: var(--color-panama-dark); }
+[data-theme="dark"] .graph-node--uk-fra            { stroke: var(--color-uk-fra-dark); }
+[data-theme="dark"] .graph-node--japan-bsr         { stroke: var(--color-japan-bsr-dark); }
+[data-theme="dark"] .graph-node--singapore-mas     { stroke: var(--color-singapore-mas-dark); }
+[data-theme="dark"] .graph-node--us-fed            { stroke: var(--color-us-fed-dark); }
+[data-theme="dark"] .graph-node--canada-osfi       { stroke: var(--color-canada-osfi-dark); }
+[data-theme="dark"] .graph-node--australia-apra    { stroke: var(--color-australia-apra-dark); }
+[data-theme="dark"] .graph-node--switzerland-finma { stroke: var(--color-switzerland-finma-dark); }
+[data-theme="dark"] .graph-node--hongkong-hkma     { stroke: var(--color-hongkong-hkma-dark); }
+[data-theme="dark"] .graph-node--mexico-cnbv       { stroke: var(--color-mexico-cnbv-dark); }
+[data-theme="dark"] .graph-node--brazil-bcb        { stroke: var(--color-brazil-bcb-dark); }
+[data-theme="dark"] .graph-node--indonesia-ojk     { stroke: var(--color-indonesia-ojk-dark); }
+[data-theme="dark"] .graph-node--malaysia-bnm      { stroke: var(--color-malaysia-bnm-dark); }
+[data-theme="dark"] .graph-node--vietnam-sbv       { stroke: var(--color-vietnam-sbv-dark); }
+[data-theme="dark"] .graph-node--thailand-bot      { stroke: var(--color-thailand-bot-dark); }
+
+
+/* =============================================================
+   15.  COMPLETENESS & VALIDATION
+   ============================================================= */
+.completeness-bar {
+  position: relative;
+  height: 6px;
+  background: rgba(184, 92, 58, 0.10);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.completeness-bar__fill {
+  height: 100%;
+  background: var(--accent);
+  width: var(--value, 0%);
+  transition: width var(--transition-base);
+}
+.completeness-bar--success .completeness-bar__fill   { background: var(--status-active); }
+.completeness-bar--warning .completeness-bar__fill   { background: var(--status-pending); }
+.completeness-bar--danger  .completeness-bar__fill   { background: var(--status-conflicted); }
+
+.validation-score {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  font: 700 28px/1 var(--font-sans);
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.5px;
+}
+.validation-score > small {
+  font: 700 12px/1 var(--font-sans);
+  color: var(--text-muted);
+}
+.validation-score--high   { color: var(--status-active); }
+.validation-score--medium { color: var(--status-pending); }
+.validation-score--low    { color: var(--status-conflicted); }
+
+
+/* =============================================================
+   16.  ALERTS, TOOLTIPS, DROPDOWNS, MODALS
+   ============================================================= */
+
+/* ----- Alert banner — 3px left strip, padded body ----- */
+.alert {
+  display: flex;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius);
+  border-left: 3px solid var(--accent);
+  font: 400 13px/1.5 var(--font-sans);
+  background: var(--accent-faint);
+  color: var(--text-primary);
+}
+.alert__title { font-weight: 700; }
+.alert--info     { border-left-color: var(--accent);             background: var(--accent-faint); color: var(--sienna-700); }
+.alert--warning  { border-left-color: var(--status-pending);     background: var(--status-pending-bg); color: #8A6A10; }
+.alert--error    { border-left-color: var(--status-conflicted);  background: var(--status-conflicted-bg); color: #8A2020; }
+.alert--success  { border-left-color: var(--status-active);      background: var(--status-active-bg); color: #2A5008; }
+
+[data-theme="dark"] .alert--info    { color: var(--sienna-300); }
+[data-theme="dark"] .alert--warning { color: var(--status-pending); }
+[data-theme="dark"] .alert--error   { color: var(--status-conflicted); }
+[data-theme="dark"] .alert--success { color: var(--status-active); }
+
+/* ----- Tooltip ----- */
+.tooltip {
+  display: inline-block;
+  max-width: 240px;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius);
+  font: 400 12px/1.4 var(--font-sans);
+  background: var(--text-primary);
+  color: var(--text-inverse);
+  pointer-events: none;
+  box-shadow: var(--shadow-popover);
+}
+
+/* ----- Modal ----- */
+.modal-scrim {
+  position: fixed;
+  inset: 0;
+  background: var(--overlay-scrim);
+  z-index: var(--z-modal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+}
+.modal {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--space-8);
+  max-width: 560px;
+  width: 100%;
+  box-shadow: var(--shadow-modal);
+}
+.modal__title {
+  font: 700 18px/1.3 var(--font-sans);
+  color: var(--text-primary);
+  margin-bottom: var(--space-3);
+}
+.modal__body  { color: var(--text-secondary); font: 400 14px/1.6 var(--font-sans); }
+.modal__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  margin-top: var(--space-6);
+}
+
+/* ----- Dropdown menu — anchored popover with appear animation ----- */
+.menu-wrap { position: relative; display: inline-block; }
+.menu {
+  padding: 4px 0;
+  min-width: 200px;
+  background: var(--surface);
+  border: 1px solid rgba(184, 92, 58, 0.18);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-popover);
+  transform-origin: top right;
+}
+.menu--anchored {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: var(--z-overlay);
+  opacity: 0;
+  transform: translateY(-4px) scale(0.98);
+  pointer-events: none;
+  transition:
+    opacity var(--transition-panel),
+    transform var(--transition-panel);
+}
+.menu-wrap.is-open > .menu--anchored {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+[data-theme="dark"] .menu { border-color: rgba(248, 248, 248, 0.12); background: var(--surface-input); }
+.menu__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: 36px;
+  padding: 0 var(--space-4);
+  font: 400 13px/1 var(--font-sans);
+  color: var(--text-primary);
+  cursor: pointer;
+  position: relative;
+  transition:
+    background var(--transition-micro),
+    color var(--transition-micro),
+    padding-left var(--transition-micro);
+}
+.menu__item::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 6px; bottom: 6px;
+  width: 2px;
+  background: var(--accent);
+  transform: scaleY(0);
+  transform-origin: center;
+  transition: transform var(--transition-micro);
+}
+.menu__item:hover { background: var(--accent-faint); color: var(--accent); padding-left: calc(var(--space-4) + 4px); }
+.menu__item:hover::before { transform: scaleY(1); }
+[data-theme="dark"] .menu__item:hover { background: rgba(248, 248, 248, 0.06); color: var(--text-primary); }
+.menu__item.is-selected { color: var(--accent); font-weight: 700; }
+.menu__item--danger { color: var(--status-conflicted); }
+.menu__item--danger:hover { background: var(--status-conflicted-bg); color: var(--status-conflicted); }
+.menu__item__shortcut {
+  margin-left: auto;
+  font: 400 10px/1 var(--font-mono);
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+}
+.menu__divider { height: 1px; background: var(--divider); margin: 4px 0; border: none; }
+.menu__group {
+  padding: 8px var(--space-4) 4px;
+  font: 700 9px/1 var(--font-sans);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* ----- Tabs ----- */
+.tabs {
+  display: flex;
+  align-items: stretch;
+  gap: var(--space-4);
+  border-bottom: 1px solid var(--divider);
+}
+.tab {
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 var(--space-2);
+  font: 700 13px/1 var(--font-sans);
+  color: var(--text-muted);
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  background: transparent;
+  border-radius: 0;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  transition: color var(--transition-micro), border-color var(--transition-micro);
+}
+.tab:hover { color: var(--text-secondary); border-bottom-color: var(--accent-border); }
+.tab.is-active { color: var(--accent); border-bottom-color: var(--accent); }
+[data-theme="dark"] .tab.is-active { color: var(--text-primary); border-bottom-color: var(--text-primary); }
+
+/* ----- Breadcrumbs ----- */
+.breadcrumbs { display: flex; align-items: center; gap: 6px; font: 400 13px/1 var(--font-sans); color: var(--text-secondary); }
+.breadcrumbs__sep { color: var(--text-muted); }
+.breadcrumbs__current { color: var(--text-primary); }
+.breadcrumbs a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 2px 4px;
+  margin: -2px -4px;
+  border-radius: var(--radius);
+  transition: color var(--transition-micro), background var(--transition-micro);
+}
+.breadcrumbs a:hover { color: var(--accent); background: var(--accent-faint); }
+
+
+/* =============================================================
+   17.  THEME OVERRIDES — regulation themes (structure only)
+   -------------------------------------------------------------
+   Lets a page or surface re-key the accent to a regulation
+   colour without touching component code. Use sparingly — only
+   when a user is editing or viewing a single regulation in
+   isolation. Borders and focus rings follow.
+   ============================================================= */
+[data-theme="regulation-lcr"]               { --accent: var(--color-lcr);               --accent-hover: var(--color-lcr);               --accent-active: var(--color-lcr); --focus-ring: var(--color-lcr); --border-focus: var(--color-lcr); --accent-faint: var(--color-lcr-light); }
+[data-theme="regulation-nsfr"]              { --accent: var(--color-nsfr);              --accent-hover: var(--color-nsfr);              --accent-active: var(--color-nsfr); --focus-ring: var(--color-nsfr); --border-focus: var(--color-nsfr); --accent-faint: var(--color-nsfr-light); }
+[data-theme="regulation-almm"]              { --accent: var(--color-almm);              --accent-hover: var(--color-almm);              --accent-active: var(--color-almm); --focus-ring: var(--color-almm); --border-focus: var(--color-almm); --accent-faint: var(--color-almm-light); }
+[data-theme="regulation-irl"]               { --accent: var(--color-irl);               --accent-hover: var(--color-irl);               --accent-active: var(--color-irl); --focus-ring: var(--color-irl); --border-focus: var(--color-irl); --accent-faint: var(--color-irl-light); }
+[data-theme="regulation-peru"]              { --accent: var(--color-peru);              --accent-hover: var(--color-peru);              --accent-active: var(--color-peru); --focus-ring: var(--color-peru); --border-focus: var(--color-peru); --accent-faint: var(--color-peru-light); }
+[data-theme="regulation-panama"]            { --accent: var(--color-panama);            --accent-hover: var(--color-panama);            --accent-active: var(--color-panama); --focus-ring: var(--color-panama); --border-focus: var(--color-panama); --accent-faint: var(--color-panama-light); }
+[data-theme="regulation-uk-fra"]            { --accent: var(--color-uk-fra);            --accent-hover: var(--color-uk-fra);            --accent-active: var(--color-uk-fra); --focus-ring: var(--color-uk-fra); --border-focus: var(--color-uk-fra); --accent-faint: var(--color-uk-fra-light); }
+[data-theme="regulation-japan-bsr"]         { --accent: var(--color-japan-bsr);         --accent-hover: var(--color-japan-bsr);         --accent-active: var(--color-japan-bsr); --focus-ring: var(--color-japan-bsr); --border-focus: var(--color-japan-bsr); --accent-faint: var(--color-japan-bsr-light); }
+[data-theme="regulation-singapore-mas"]     { --accent: var(--color-singapore-mas);     --accent-hover: var(--color-singapore-mas);     --accent-active: var(--color-singapore-mas); --focus-ring: var(--color-singapore-mas); --border-focus: var(--color-singapore-mas); --accent-faint: var(--color-singapore-mas-light); }
+[data-theme="regulation-us-fed"]            { --accent: var(--color-us-fed);            --accent-hover: var(--color-us-fed);            --accent-active: var(--color-us-fed); --focus-ring: var(--color-us-fed); --border-focus: var(--color-us-fed); --accent-faint: var(--color-us-fed-light); }
+[data-theme="regulation-canada-osfi"]       { --accent: var(--color-canada-osfi);       --accent-hover: var(--color-canada-osfi);       --accent-active: var(--color-canada-osfi); --focus-ring: var(--color-canada-osfi); --border-focus: var(--color-canada-osfi); --accent-faint: var(--color-canada-osfi-light); }
+[data-theme="regulation-australia-apra"]    { --accent: var(--color-australia-apra);    --accent-hover: var(--color-australia-apra);    --accent-active: var(--color-australia-apra); --focus-ring: var(--color-australia-apra); --border-focus: var(--color-australia-apra); --accent-faint: var(--color-australia-apra-light); }
+[data-theme="regulation-switzerland-finma"] { --accent: var(--color-switzerland-finma); --accent-hover: var(--color-switzerland-finma); --accent-active: var(--color-switzerland-finma); --focus-ring: var(--color-switzerland-finma); --border-focus: var(--color-switzerland-finma); --accent-faint: var(--color-switzerland-finma-light); }
+[data-theme="regulation-hongkong-hkma"]     { --accent: var(--color-hongkong-hkma);     --accent-hover: var(--color-hongkong-hkma);     --accent-active: var(--color-hongkong-hkma); --focus-ring: var(--color-hongkong-hkma); --border-focus: var(--color-hongkong-hkma); --accent-faint: var(--color-hongkong-hkma-light); }
+[data-theme="regulation-mexico-cnbv"]       { --accent: var(--color-mexico-cnbv);       --accent-hover: var(--color-mexico-cnbv);       --accent-active: var(--color-mexico-cnbv); --focus-ring: var(--color-mexico-cnbv); --border-focus: var(--color-mexico-cnbv); --accent-faint: var(--color-mexico-cnbv-light); }
+[data-theme="regulation-brazil-bcb"]        { --accent: var(--color-brazil-bcb);        --accent-hover: var(--color-brazil-bcb);        --accent-active: var(--color-brazil-bcb); --focus-ring: var(--color-brazil-bcb); --border-focus: var(--color-brazil-bcb); --accent-faint: var(--color-brazil-bcb-light); }
+[data-theme="regulation-indonesia-ojk"]     { --accent: var(--color-indonesia-ojk);     --accent-hover: var(--color-indonesia-ojk);     --accent-active: var(--color-indonesia-ojk); --focus-ring: var(--color-indonesia-ojk); --border-focus: var(--color-indonesia-ojk); --accent-faint: var(--color-indonesia-ojk-light); }
+[data-theme="regulation-malaysia-bnm"]      { --accent: var(--color-malaysia-bnm);      --accent-hover: var(--color-malaysia-bnm);      --accent-active: var(--color-malaysia-bnm); --focus-ring: var(--color-malaysia-bnm); --border-focus: var(--color-malaysia-bnm); --accent-faint: var(--color-malaysia-bnm-light); }
+[data-theme="regulation-vietnam-sbv"]       { --accent: var(--color-vietnam-sbv);       --accent-hover: var(--color-vietnam-sbv);       --accent-active: var(--color-vietnam-sbv); --focus-ring: var(--color-vietnam-sbv); --border-focus: var(--color-vietnam-sbv); --accent-faint: var(--color-vietnam-sbv-light); }
+[data-theme="regulation-thailand-bot"]      { --accent: var(--color-thailand-bot);      --accent-hover: var(--color-thailand-bot);      --accent-active: var(--color-thailand-bot); --focus-ring: var(--color-thailand-bot); --border-focus: var(--color-thailand-bot); --accent-faint: var(--color-thailand-bot-light); }
+
+
+/* =============================================================
+   18.  ACCESSIBILITY — focus, disabled, errors, contrast
+   ============================================================= */
+
+/* Universal focus ring — always 2px sienna, 2px offset.
+   Sienna is mode-invariant by design.   */
+:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Inputs and buttons already define their own focus inside
+   §0. The selector below catches generic
+   anchors, custom controls and div[tabindex]. */
+a:focus-visible,
+[role="button"]:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+/* Disabled */
+.is-disabled,
+[aria-disabled="true"],
+:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+.is-disabled:hover,
+[aria-disabled="true"]:hover {
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Error markings — generic, in addition to .input.error */
+[aria-invalid="true"] {
+  border-color: var(--border-error) !important;
+}
+.error-text { color: var(--border-error); font: 400 12px/1.4 var(--font-sans); }
+
+/* Screen-reader only utility */
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 1ms !important;
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+
+/* =============================================================
+   19.  RESPONSIVE DESIGN — 640 / 1200 / 1600
+   ============================================================= */
+
+/* Tablet — 640px and up */
+@media (min-width: 640px) {
+  .grid-2 { grid-template-columns: repeat(2, 1fr); grid-auto-rows: auto; align-items: start; }
+  .grid-3 { grid-template-columns: repeat(2, 1fr); grid-auto-rows: auto; align-items: start; }
+  .grid-4 { grid-template-columns: repeat(2, 1fr); grid-auto-rows: auto; align-items: start; }
+  .grid-5 { grid-template-columns: repeat(2, 1fr); grid-auto-rows: auto; align-items: start; }
+  .grid-6 { grid-template-columns: repeat(3, 1fr); grid-auto-rows: auto; align-items: start; }
+  .hide-mobile  { display: none !important; }
+  .show-tablet  { display: initial; }
+}
+
+/* Tablet Landscape — 1000px and up */
+@media (min-width: 1000px) {
+  .grid-2 { grid-template-columns: repeat(2, 1fr); grid-auto-rows: auto; align-items: start; }
+  .grid-3 { grid-template-columns: repeat(2, 1fr); grid-auto-rows: auto; align-items: start; }
+  .grid-4 { grid-template-columns: repeat(2, 1fr); grid-auto-rows: auto; align-items: start; }
+  .grid-5 { grid-template-columns: repeat(3, 1fr); grid-auto-rows: auto; align-items: start; }
+  .grid-6 { grid-template-columns: repeat(3, 1fr); grid-auto-rows: auto; align-items: start; }
+}
+
+/* Desktop — 1200px and up */
+@media (min-width: 1200px) {
+  .grid-3 { grid-template-columns: repeat(3, 1fr); grid-auto-rows: auto; align-items: start; }
+  .grid-4 { grid-template-columns: repeat(4, 1fr); grid-auto-rows: auto; align-items: start; }
+  .grid-5 { grid-template-columns: repeat(5, 1fr); grid-auto-rows: auto; align-items: start; }
+  .grid-6 { grid-template-columns: repeat(6, 1fr); grid-auto-rows: auto; align-items: start; }
+  .hide-desktop { display: none !important; }
+  .show-desktop { display: initial; }
+}
+
+/* Wide — 1600px and up. Loosen container padding so wide-screen
+   surfaces don't feel bottled-up. */
+@media (min-width: 1600px) {
+  .container { padding-inline: var(--space-12); }
+}
+
+/* Display helpers */
+.hidden    { display: none !important; }
+.block     { display: block; }
+.inline    { display: inline; }
+.inline-block { display: inline-block; }
+.relative  { position: relative; }
+.absolute  { position: absolute; }
+.sticky    { position: sticky; }
+.fixed     { position: fixed; }
+
+
+/* =============================================================
+   20.  PRINT — slide & document hand-offs
+   ============================================================= */
+@media print {
+  :root, [data-theme="dark"] {
+    --page-bg: #FFFFFF;
+    --surface: #FFFFFF;
+    --text-primary: #0F0F0F;
+    --text-secondary: #3A3A3A;
+    --text-muted: #6A6A6A;
+  }
+  html, body { background: #FFFFFF; color: #0F0F0F; }
+  .card { box-shadow: none !important; }
+  .btn  { display: none; }                     /* CTAs don't belong on paper */
+  .hide-print { display: none !important; }
+}
+
+/* =============================================================
+   21.  INTERACTIVE HOVER POLISH
+   -------------------------------------------------------------
+   Subtle motion for elements that are wrapped in <a> or <button>
+   (links and clickable chips). The base classes for these
+   elements live in §0; we only add the
+   transition and hover overrides here so cosmetic interactivity
+   never reaches static labels.
+   ============================================================= */
+.tag {
+  transition:
+    background  var(--transition-micro),
+    border-color var(--transition-micro),
+    transform   var(--transition-micro);
+}
+a.tag, button.tag {
+  cursor: pointer;
+  text-decoration: none;
+  background-color: var(--accent-faint);
+}
+a.tag:hover,
+button.tag:hover {
+  transform: translateY(-1px);
+  border-color: var(--accent-border);
+}
+
+.alert { transition: box-shadow var(--transition-micro), transform var(--transition-micro); }
+a.alert:hover,
+.alert.is-interactive:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-popover);
+  cursor: pointer;
+}
+
+.eyebrow {
+  transition: color var(--transition-micro);
+}
+
+/* Sidebar / nav item — the canonical pattern for vertical nav.
+   Use as: <a class="nav-item"> or <button class="nav-item"> */
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  height: 40px;
+  padding: 0 var(--space-4);
+  font: 400 13px/1 var(--font-sans);
+  color: var(--text-secondary);
+  text-decoration: none;
+  border-left: 2px solid transparent;
+  cursor: pointer;
+  background: transparent;
+  border-top: 0; border-right: 0; border-bottom: 0;
+  transition:
+    background   var(--transition-micro),
+    color        var(--transition-micro),
+    border-color var(--transition-micro),
+    padding-left var(--transition-micro);
+}
+.nav-item:hover {
+  background: var(--accent-faint);
+  color: var(--accent);
+  border-left-color: var(--accent-border);
+  padding-left: calc(var(--space-4) + 2px);
+}
+.nav-item.is-active {
+  color: var(--accent);
+  border-left-color: var(--accent);
+  font-weight: 700;
+}
+[data-theme="dark"] .nav-item:hover {
+  background: rgba(248, 248, 248, 0.04);
+  color: var(--text-primary);
+  border-left-color: rgba(248, 248, 248, 0.16);
+}
+[data-theme="dark"] .nav-item.is-active {
+  color: var(--text-primary);
+  border-left-color: var(--text-primary);
+}
+.nav-item__label {
+  opacity: 0;
+  max-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  transition: opacity var(--transition-panel), max-width var(--transition-panel);
+}
+.sidebar--expanded .nav-item__label {
+  opacity: 1;
+  max-width: 200px;
+}
+.sidebar:not(.sidebar--expanded) .nav-item,
+.sidebar:not(.sidebar--expanded) .sidebar__brand {
+  padding: 0;
+  justify-content: center;
+  gap: 0;
+}
+.sidebar__brand > svg {
+  flex-shrink: 0;
+  height: 32px;
+  width: auto;
+  transition: height var(--transition-panel);
+}
+.sidebar:not(.sidebar--expanded) .sidebar__brand > svg { height: 24px; }
+.sidebar__footer-flag {
+  overflow: hidden;
+  display: inline-block;
+  max-width: 2em;
+  transition: opacity var(--transition-panel), max-width var(--transition-panel);
+}
+.sidebar--expanded .sidebar__footer-flag {
+  opacity: 0;
+  max-width: 0;
+}
+.sidebar:not(.sidebar--expanded) .sidebar__footer {
+  padding: var(--space-3) 0;
+  text-align: center;
+}
+
+/* =============================================================
+   22.  SCOPING PATTERNS — selecting from 50+ regulations
+   -------------------------------------------------------------
+   Three patterns, listed in order of recommended use as the
+   registry grows. Use the searchable combobox (.combobox) as
+   the workhorse — it scales linearly. Use scope-pills to show
+   the active multi-selection. Use scope-bar (two-tier strip)
+   only inside a single jurisdiction context.
+   ============================================================= */
+
+/* ---------- 22a · Scope bar (two-tier jurisdiction → regulation) -------- */
+.scope-bar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: var(--surface-high);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.scope-bar__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+.scope-bar__label {
+  font: 700 9px/1 var(--font-sans);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-right: var(--space-2);
+}
+.scope-chip {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 12px;
+  font: 500 12px/1 var(--font-sans);
+  color: var(--text-secondary);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    background   var(--transition-micro),
+    color        var(--transition-micro),
+    border-color var(--transition-micro);
+}
+.scope-chip:hover {
+  color: var(--accent);
+  border-color: var(--accent-border);
+  background: var(--accent-faint);
+}
+.scope-chip.is-active {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-faint);
+  font-weight: 700;
+}
+.scope-chip__count {
+  font: 400 10px/1 var(--font-mono);
+  color: var(--text-muted);
+  margin-left: 2px;
+  padding-left: 8px;
+  border-left: 1px solid var(--divider);
+}
+.scope-chip.is-active .scope-chip__count { color: var(--accent); border-left-color: var(--accent-border); }
+
+/* ---------- 22b · Combobox (searchable grouped selector) ---------------- */
+.combobox { position: relative; min-width: 320px; }
+.combobox__trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  height: 40px;
+  padding: 0 12px 0 14px;
+  width: 100%;
+  font: 400 13px/1 var(--font-sans);
+  color: var(--text-primary);
+  background: var(--surface-input);
+  border: 1px solid var(--accent-border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition:
+    border-color var(--transition-micro),
+    background   var(--transition-micro);
+}
+.combobox__trigger:hover { border-color: rgba(184, 92, 58, 0.45); }
+.combobox.is-open > .combobox__trigger { border: 1.5px solid var(--accent); padding: 0 11.5px 0 13.5px; }
+.combobox__trigger__label {
+  font: 700 9px/1 var(--font-sans);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-right: var(--space-3);
+}
+.combobox__trigger__value { color: var(--text-primary); font-weight: 500; }
+.combobox__trigger__chev {
+  font-size: 9px;
+  color: var(--text-muted);
+  transition: transform var(--transition-micro);
+}
+.combobox.is-open .combobox__trigger__chev { transform: rotate(180deg); }
+
+.combobox__panel {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0; right: 0;
+  z-index: var(--z-overlay);
+  background: var(--surface);
+  border: 1px solid var(--accent-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-popover);
+  max-height: 420px;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  transform: translateY(-4px) scale(0.99);
+  transform-origin: top center;
+  pointer-events: none;
+  transition: opacity var(--transition-panel), transform var(--transition-panel);
+}
+.combobox.is-open > .combobox__panel {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+.combobox__search {
+  position: relative;
+  padding: var(--space-3);
+  border-bottom: 1px solid var(--divider);
+}
+.combobox__search input {
+  width: 100%;
+  height: 32px;
+  padding: 0 12px 0 30px;
+  font: 400 13px/1 var(--font-sans);
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  outline: none;
+  transition: border-color var(--transition-micro);
+}
+.combobox__search input:focus { border-color: var(--accent); }
+.combobox__search__icon {
+  position: absolute;
+  left: calc(var(--space-3) + 10px);
+  top: 50%;
+  width: 14px; height: 14px;
+  margin-top: -7px;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+.combobox__list {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-2) 0;
+}
+.combobox__group {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) var(--space-4) var(--space-2);
+  font: 700 9px/1 var(--font-sans);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  position: sticky;
+  top: 0;
+  background: var(--surface);
+}
+.combobox__option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: 8px var(--space-4);
+  cursor: pointer;
+  transition: background var(--transition-micro);
+  position: relative;
+}
+.combobox__option:hover { background: var(--accent-faint); }
+.combobox__option.is-selected { background: var(--accent-faint); }
+.combobox__option.is-selected::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 8px; bottom: 8px;
+  width: 2px;
+  background: var(--accent);
+}
+.combobox__option__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--reg-color, var(--accent));
+  flex: none;
+}
+.combobox__option__body { flex: 1; min-width: 0; }
+.combobox__option__name {
+  font: 500 13px/1.2 var(--font-sans);
+  color: var(--text-primary);
+}
+.combobox__option__meta {
+  font: 400 11px/1.3 var(--font-sans);
+  color: var(--text-muted);
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.combobox__option__check {
+  margin-left: auto;
+  width: 16px;
+  height: 16px;
+  flex: none;
+  border: 1px solid var(--accent-border);
+  border-radius: var(--radius);
+  position: relative;
+  transition: background var(--transition-micro), border-color var(--transition-micro);
+}
+.combobox__option.is-selected .combobox__option__check {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.combobox__option.is-selected .combobox__option__check::after {
+  content: "";
+  position: absolute;
+  left: 4px; top: 1px;
+  width: 5px; height: 9px;
+  border-right: 1.75px solid #FFF;
+  border-bottom: 1.75px solid #FFF;
+  transform: rotate(45deg);
+}
+.combobox__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-3) var(--space-4);
+  border-top: 1px solid var(--divider);
+  background: var(--surface-high);
+}
+.combobox__footer__count {
+  font: 700 10px/1 var(--font-sans);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* Inline combobox — used when the trigger is something other than the
+   full-width combobox__trigger (e.g. the .scope-pill__add slot inside
+   a scope-bar). The panel anchors to the trigger and stays a sensible
+   fixed width regardless of trigger size. */
+.combobox--inline { min-width: 0; display: inline-block; }
+.combobox--inline > .combobox__panel {
+  left: 0; right: auto;
+  width: 380px;
+  max-width: 90vw;
+}
+
+/* ---------- 22c · Scope pills (visible active selection) ---------------- */
+.scope-pills {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.scope-pills__label {
+  font: 700 9px/1 var(--font-sans);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-right: var(--space-2);
+}
+.scope-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 26px;
+  padding: 0 6px 0 10px;
+  font: 700 10px/1 var(--font-sans);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--reg-color, var(--accent));
+  background: var(--reg-light, var(--accent-faint));
+  border: 1px solid color-mix(in oklab, var(--reg-color, var(--accent)) 28%, transparent);
+  border-radius: var(--radius);
+  white-space: nowrap;
+}
+.scope-pill__close {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  width: 16px;
+  height: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: inherit;
+  cursor: pointer;
+  opacity: 0.6;
+  border-radius: var(--radius);
+  font-size: 14px;
+  line-height: 1;
+  transition: opacity var(--transition-micro), background var(--transition-micro);
+}
+.scope-pill__close:hover {
+  opacity: 1;
+  background: color-mix(in oklab, var(--reg-color, var(--accent)) 20%, transparent);
+}
+.scope-pill__add {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 26px;
+  padding: 0 10px;
+  font: 700 10px/1 var(--font-sans);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  background: transparent;
+  border: 1px dashed var(--accent-border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color var(--transition-micro), border-color var(--transition-micro), background var(--transition-micro);
+}
+.scope-pill__add:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  border-style: solid;
+  background: var(--accent-faint);
+}
+.scope-pill__clear {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  margin-left: auto;
+  font: 400 11px/1 var(--font-sans);
+  color: var(--text-muted);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.scope-pill__clear:hover { color: var(--accent); }
+
+/* Re-key scope pills by regulation */
+.scope-pill--lcr               { --reg-color: var(--color-lcr);               --reg-light: var(--color-lcr-light); }
+.scope-pill--nsfr              { --reg-color: var(--color-nsfr);              --reg-light: var(--color-nsfr-light); }
+.scope-pill--almm              { --reg-color: var(--color-almm);              --reg-light: var(--color-almm-light); }
+.scope-pill--irl               { --reg-color: var(--color-irl);               --reg-light: var(--color-irl-light); }
+.scope-pill--peru              { --reg-color: var(--color-peru);              --reg-light: var(--color-peru-light); }
+.scope-pill--panama            { --reg-color: var(--color-panama);            --reg-light: var(--color-panama-light); }
+.scope-pill--uk-fra            { --reg-color: var(--color-uk-fra);            --reg-light: var(--color-uk-fra-light); }
+.scope-pill--japan-bsr         { --reg-color: var(--color-japan-bsr);         --reg-light: var(--color-japan-bsr-light); }
+.scope-pill--singapore-mas     { --reg-color: var(--color-singapore-mas);     --reg-light: var(--color-singapore-mas-light); }
+.scope-pill--us-fed            { --reg-color: var(--color-us-fed);            --reg-light: var(--color-us-fed-light); }
+.scope-pill--canada-osfi       { --reg-color: var(--color-canada-osfi);       --reg-light: var(--color-canada-osfi-light); }
+.scope-pill--australia-apra    { --reg-color: var(--color-australia-apra);    --reg-light: var(--color-australia-apra-light); }
+.scope-pill--switzerland-finma { --reg-color: var(--color-switzerland-finma); --reg-light: var(--color-switzerland-finma-light); }
+.scope-pill--hongkong-hkma     { --reg-color: var(--color-hongkong-hkma);     --reg-light: var(--color-hongkong-hkma-light); }
+.scope-pill--mexico-cnbv       { --reg-color: var(--color-mexico-cnbv);       --reg-light: var(--color-mexico-cnbv-light); }
+.scope-pill--brazil-bcb        { --reg-color: var(--color-brazil-bcb);        --reg-light: var(--color-brazil-bcb-light); }
+.scope-pill--indonesia-ojk     { --reg-color: var(--color-indonesia-ojk);     --reg-light: var(--color-indonesia-ojk-light); }
+.scope-pill--malaysia-bnm      { --reg-color: var(--color-malaysia-bnm);      --reg-light: var(--color-malaysia-bnm-light); }
+.scope-pill--vietnam-sbv       { --reg-color: var(--color-vietnam-sbv);       --reg-light: var(--color-vietnam-sbv-light); }
+.scope-pill--thailand-bot      { --reg-color: var(--color-thailand-bot);      --reg-light: var(--color-thailand-bot-light); }
+
+
+/* ---------- 22d · Jurisdiction colour theming for the combined control
+   The host element (#scope-control or any .scope-bar wrapper) sets the
+   custom property `--juris-color` (and optionally `--juris-light`) when
+   a jurisdiction is active. The active chip, the popover focus, and
+   the "+ Add" trigger all key off these so the control feels
+   jurisdiction-aware without going gaudy. With no jurisdiction active
+   the variables stay unset and the control falls back to brand sienna. */
+.scope-bar .scope-chip.is-active {
+  color: var(--juris-color, var(--accent));
+  border-color: var(--juris-color, var(--accent));
+  background: var(--juris-light, var(--accent-faint));
+}
+.scope-bar .scope-chip.is-active .scope-chip__count {
+  color: var(--juris-color, var(--accent));
+  border-left-color: color-mix(in oklab, var(--juris-color, var(--accent)) 30%, transparent);
+}
+.scope-bar .scope-pill__add:hover {
+  color: var(--juris-color, var(--accent));
+  border-color: var(--juris-color, var(--accent));
+  border-style: solid;
+  background: var(--juris-light, var(--accent-faint));
+}
+.scope-bar .combobox--inline .combobox__search input:focus {
+  border-color: var(--juris-color, var(--accent));
+}
+.scope-bar .combobox__option:hover {
+  background: var(--juris-light, var(--accent-faint));
+}
+.scope-bar .combobox__option.is-selected::before {
+  background: var(--juris-color, var(--accent));
+}
+.scope-bar .combobox__option.is-selected .combobox__option__check {
+  background: var(--juris-color, var(--accent));
+  border-color: var(--juris-color, var(--accent));
+}
+
+/* ---------- 22e · Scope control (host wrapper + popover) ---------------- */
+.scope-control {
+  position: relative;
+}
+.scope-control__row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  min-height: 32px;
+  padding: var(--space-1) 0;
+}
+.scope-control__popover {
+  position: absolute;
+  top: calc(100% + var(--space-1));
+  right: 0;
+  left: auto;
+  z-index: var(--z-overlay);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-width: 560px;
+  max-width: min(900px, 90vw);
+  box-shadow: var(--shadow-popover);
+}
+.scope-control__popover .scope-chip.is-active {
+  color: var(--juris-color, var(--accent));
+  border-color: var(--juris-color, var(--accent));
+  background: var(--juris-light, var(--accent-faint));
+}
+.scope-pill__add.is-open {
+  color: var(--accent);
+  border-color: var(--accent);
+  border-style: solid;
+  background: var(--accent-faint);
+}
+
+/* ---------- 22f · Inline expansion in host bar (e.g. TopBar) ------------ */
+.scope-control--open {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+.scope-control__inline {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  overflow-x: auto;
+  scrollbar-width: none;
+  border-right: 1px solid var(--divider);
+  padding-right: var(--space-3);
+}
+.scope-control__inline::-webkit-scrollbar { display: none; }
+.scope-chip:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+.scope-control__search {
+  flex-shrink: 0;
+  width: 90px;
+  height: 28px;
+  padding: 0 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font: 400 12px/1 var(--font-sans);
+  color: var(--text-primary);
+  outline: none;
+  transition:
+    border-color var(--transition-micro),
+    width       150ms ease-out;
+}
+.scope-control__search:focus {
+  border-color: var(--accent-border);
+  width: 160px;
+}
+.scope-control__search::placeholder { color: var(--text-muted); }
+
+
+/* =============================================================
+   23.  ICONS — outline-stroke utility
+   -------------------------------------------------------------
+   Outline-only, 1.5px stroke, rounded linecap/linejoin. Render
+   any SVG inside an `.icon` with `stroke="currentColor"` — the
+   wrapper sets the size, and the context modifier sets the
+   colour. The 16/24 grid is the design system default.
+   ============================================================= */
+.icon {
+  display: inline-flex;
+  flex: none;
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+  color: var(--text-secondary);
+}
+.icon > svg {
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.icon--sm   { width: 16px; height: 16px; }
+.icon--md   { width: 20px; height: 20px; }
+.icon--lg   { width: 24px; height: 24px; }
+.icon--xl   { width: 32px; height: 32px; }
+.icon--2xl  { width: 48px; height: 48px; }
+
+/* Context colours — match DESIGN_SYSTEM.md §Iconography */
+.icon--muted    { color: var(--text-muted); }
+.icon--primary  { color: var(--text-primary); }
+.icon--accent   { color: var(--accent); }
+.icon--error    { color: var(--status-conflicted); }
+.icon--success  { color: var(--status-active); }
+.icon--inverse  { color: var(--text-inverse); }
+
+
+/* =============================================================
+   24.  SPINNER & SKELETON — loading states
+   ============================================================= */
+@keyframes obligai-spin    { to { transform: rotate(360deg); } }
+@keyframes obligai-shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+.spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 1.5px solid var(--accent-faint);
+  border-top-color: var(--accent);
+  border-right-color: var(--accent);
+  border-bottom-color: var(--accent);
+  border-radius: 50%;
+  animation: obligai-spin 700ms linear infinite;
+}
+.spinner--sm     { width: 16px; height: 16px; border-width: 1.5px; }
+.spinner--lg     { width: 40px; height: 40px; border-width: 2px; }
+.spinner--inline { vertical-align: middle; margin-right: 6px; }
+.spinner--centered {
+  display: block;
+  margin: var(--space-12) auto;
+}
+@media (prefers-reduced-motion: reduce) {
+  .spinner { animation-duration: 2000ms; }
+}
+
+.skeleton {
+  display: block;
+  height: 1em;
+  border-radius: var(--radius);
+  background:
+    linear-gradient(90deg,
+      var(--skeleton-base) 0%,
+      var(--skeleton-shimmer) 50%,
+      var(--skeleton-base) 100%);
+  background-size: 200% 100%;
+  animation: obligai-shimmer 1.4s ease-in-out infinite;
+}
+.skeleton--text   { width: 100%; max-width: 32ch; }
+.skeleton--title  { height: 1.6em; max-width: 24ch; }
+.skeleton--block  { height: 80px; }
+.skeleton--circle { width: 32px; height: 32px; border-radius: 50%; }
+.skeleton--avatar { width: 40px; height: 40px; border-radius: 50%; }
+.skeleton-group   { display: flex; flex-direction: column; gap: var(--space-2); }
+@media (prefers-reduced-motion: reduce) {
+  .skeleton { animation: none; }
+}
+
+
+/* =============================================================
+   24b.  FLAGS — jurisdiction marker sprite wrapper
+   -------------------------------------------------------------
+   The flag sprite lives in `assets/flags.svg`. Each flag has a
+   `#flag-{cc}` id (cc = ISO 2-letter country code, or `internal`
+   for the brand-marked Internal pseudo-country, or `eu`).
+
+   Usage:
+       <span class="flag flag--lg">
+         <svg viewBox="0 0 24 16"><use href="assets/flags.svg#flag-eu"/></svg>
+       </span>
+
+   Flags are simplified geometric renderings — small enough to sit
+   inline with chips and regulation labels, recognisable enough to
+   identify the jurisdiction at a glance.
+   ============================================================= */
+.flag {
+  display: inline-flex;
+  flex: none;
+  width: 18px;
+  height: 12px;
+  vertical-align: middle;
+  border: 1px solid var(--divider);
+  border-radius: 1px;
+  overflow: hidden;
+  background: var(--surface);
+}
+.flag > svg { width: 100%; height: 100%; display: block; }
+.flag--sm  { width: 15px; height: 10px; }
+.flag--md  { width: 18px; height: 12px; }
+.flag--lg  { width: 24px; height: 16px; }
+.flag--xl  { width: 36px; height: 24px; }
+[data-theme="dark"] .flag { border-color: rgba(248, 248, 248, 0.16); }
+
+
+/* =============================================================
+   25.  EMPTY STATE — zero-data surface
+   ============================================================= */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: var(--space-12) var(--space-6);
+  gap: var(--space-3);
+}
+.empty-state__icon {
+  width: 48px;
+  height: 48px;
+  color: var(--text-muted);
+  margin-bottom: var(--space-2);
+}
+.empty-state__icon > svg {
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.empty-state__title {
+  font: 700 16px/1.3 var(--font-sans);
+  color: var(--text-primary);
+  margin: 0;
+}
+.empty-state__body {
+  font: 400 13px/1.6 var(--font-sans);
+  color: var(--text-muted);
+  margin: 0;
+  max-width: 44ch;
+}
+.empty-state__action {
+  margin-top: var(--space-3);
+}
+.empty-state--compact { padding: var(--space-6) var(--space-4); }
+.empty-state--inline  { padding: var(--space-4); }
+
+
+/* =============================================================
+   26.  PAGINATION
+   ============================================================= */
+.pagination {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  font: 400 12px/1 var(--font-sans);
+}
+.pagination__btn {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 32px;
+  padding: 0 10px;
+  background: transparent;
+  border: 0;
+  color: var(--text-secondary);
+  cursor: pointer;
+  border-radius: 0;
+  border-bottom: 2px solid transparent;
+  transition: color var(--transition-micro), border-color var(--transition-micro);
+}
+.pagination__btn:hover { color: var(--accent); }
+.pagination__btn.is-active {
+  color: var(--accent);
+  font-weight: 700;
+  border-bottom-color: var(--accent);
+}
+.pagination__btn:disabled {
+  color: var(--text-disabled);
+  cursor: not-allowed;
+}
+.pagination__btn:disabled:hover { color: var(--text-disabled); }
+.pagination__ellipsis {
+  padding: 0 6px;
+  color: var(--text-muted);
+}
+.pagination__summary {
+  font: 400 12px/1 var(--font-sans);
+  color: var(--text-muted);
+  margin-right: var(--space-3);
+}
+
+
+/* =============================================================
+   27.  SIDEBAR, TOP BAR & APP SHELL — layout chrome
+   ============================================================= */
+
+/* ----- Sidebar ----- */
+.sidebar {
+  width: 56px;
+  overflow: hidden;
+  transition: width var(--transition-panel);
+  flex: none;
+  background: var(--surface);
+  border-right: 1px solid var(--divider);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+.sidebar.sidebar--expanded { width: var(--sidebar-w); }
+.sidebar__brand {
+  height: var(--topbar-h);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-4);
+  border-bottom: 1px solid var(--divider);
+}
+.sidebar__group {
+  font: 700 9px/1 var(--font-sans);
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding: var(--space-6) var(--space-4) var(--space-2);
+}
+.sidebar__nav {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: var(--space-6);
+}
+.sidebar__footer {
+  padding: var(--space-3) var(--space-4);
+  border-top: 1px solid var(--divider);
+  font: 400 11px/1.4 var(--font-sans);
+  color: var(--text-muted);
+}
+
+/* ----- Top bar ----- */
+.topbar {
+  height: var(--topbar-h);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--space-6);
+  background: var(--surface);
+  border-bottom: 1px solid var(--divider);
+}
+.topbar__left,
+.topbar__right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+.topbar__search {
+  flex: 1;
+  max-width: 480px;
+  margin: 0 var(--space-6);
+}
+
+/* ----- App shell — pairs sidebar + topbar + content area ----- */
+.app-shell {
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  grid-template-rows: var(--topbar-h) 1fr;
+  grid-template-areas:
+    "sidebar topbar"
+    "sidebar content";
+  min-height: 100vh;
+  transition: grid-template-columns var(--transition-panel);
+  --current-sidebar-w: 56px;
+}
+.app-shell:has(.sidebar--expanded) {
+  grid-template-columns: var(--sidebar-w) 1fr;
+  --current-sidebar-w: var(--sidebar-w);
+}
+.app-shell > .sidebar { grid-area: sidebar; }
+.app-shell > .topbar  { grid-area: topbar; }
+.app-shell__content {
+  grid-area: content;
+  overflow-y: auto;
+  padding: var(--space-6) var(--page-pad);
+  background: var(--page-bg);
+}
+
+/* =============================================================
+   EXTENSION: FIXES FOR DENSE EXECUTIVE SUMMARY TABLES
+   ============================================================= */
+.table--tight {
+  width: auto !important;
+  max-width: 600px !important; /* Stops the overstretched 100% width */
+}
+
+.table--ultra-compact th,
+.table--ultra-compact td {
+  padding: var(--space-1) var(--space-2) !important; /* 4px / 8px */
+  font-size: 12px !important; /* Adds density for data */
+}
+
+
+/* =============================================================
+   JSON VIEWER — syntax highlighting (AnnotationInspector)
+   ============================================================= */
+.json-null   { color: var(--status-conflicted); }
+.json-bool   { color: #6BB0F0; }
+.json-number { color: #D48870; }
+.json-string { color: #62a87c; }
+.json-key    { color: var(--accent); font-weight: 700; }
+.json-toggle {
+  appearance: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  font-size: 10px;
+  padding: 0 var(--space-1) 0 0;
+  vertical-align: middle;
+  line-height: 1;
+}
+.json-indent { padding-left: var(--space-4); }
+.json-row    { padding: 1px 0; }
+.json-index  { color: var(--text-muted); font-size: 10px; margin-right: var(--space-2); }
+
+/* =============================================================
+   ANNOTATION INSPECTOR — accordion sections & toolbar
+   ============================================================= */
+.annotation-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: var(--space-2);
+  overflow: hidden;
+}
+.annotation-section__trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background var(--transition-micro), color var(--transition-micro);
+}
+.annotation-section__trigger:hover { background: var(--accent-faint); color: var(--accent); }
+.annotation-section__trigger.is-open { background: var(--accent-faint); color: var(--accent); }
+.annotation-section__trigger:hover > *,
+.annotation-section__trigger.is-open > * { color: var(--accent); }
+.annotation-section__chevron { color: var(--text-muted); width: 36px; flex-shrink: 0; }
+.annotation-section__chevron.is-open { color: var(--accent); }
+.chevron { flex-shrink: 0; display: block; transition: transform 200ms ease; }
+.chevron.is-open { transform: rotate(180deg); }
+.annotation-section__title { font: 700 14px/1.3 var(--font-mono); color: var(--text-primary); }
+.annotation-section__count {
+  margin-left: auto;
+  font-size: 11px;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  background: var(--surface-high);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius);
+  flex-shrink: 0;
+}
+.annotation-section__body {
+  border-top: 1px solid var(--divider);
+  padding: var(--space-4);
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  background: var(--surface-high);
+  max-height: 480px;
+  overflow-y: auto;
+}
+.annotation-section__entry { padding: var(--space-2) 0; }
+.annotation-section__entry + .annotation-section__entry { border-top: 1px solid var(--divider); }
+.annotation-toolbar {
+  display: flex;
+  gap: var(--space-4);
+  align-items: flex-end;
+  margin-bottom: var(--space-5);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--space-4);
+}
+
+/* =============================================================
+   GRAPH V3 — full-screen obligation graph (GraphV3.jsx)
+   ============================================================= */
+.gv3-root {
+  width: 100vw;
+  height: 100vh;
+  background: var(--page-bg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.gv3-bar {
+  height: 80px;
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-4);
+  border-bottom: 1px solid var(--divider);
+  flex-shrink: 0;
+  gap: var(--space-4);
+  background: var(--surface);
+  position: relative;
+  z-index: 150;
+}
+.gv3-hamburger {
+  appearance: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: var(--text-muted);
+  padding: 4px 10px;
+  flex-shrink: 0;
+  line-height: 1;
+}
+.gv3-brand { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-1); }
+.gv3-mark  { display: block; flex-shrink: 0; }
+.gv3-sep   { width: 1px; align-self: stretch; background: var(--divider); flex-shrink: 0; }
+.gv3-title {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+.gv3-title__name { font: 400 15px/1.3 var(--font-sans); color: var(--text-primary); }
+.gv3-subtitle    { font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); }
+.gv3-controls    { display: flex; align-items: center; gap: var(--space-2); }
+.gv3-zoom        { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); min-width: 36px; text-align: right; }
+.gv3-action {
+  appearance: none;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 0;
+  color: var(--text-muted);
+  font-family: var(--font-sans);
+  font-size: 11px;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: all var(--transition-micro);
+}
+.gv3-action:disabled          { opacity: 0.4; cursor: default; }
+.gv3-action--primary:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+.gv3-action--xs               { font-size: 10px; padding: 3px 8px; flex-shrink: 0; }
+
+/* ── Toolbox (Graph-v3 strip) ── */
+.toolbox-hamburger {
+  position: fixed;
+  z-index: 251;
+  width: 48px;
+  height: 56px;
+  background: var(--surface);
+  border: none;
+  border-radius: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  padding: 0;
+  line-height: 1;
+}
+.toolbox-strip {
+  position: fixed;
+  right: 0;
+  height: 56px;
+  padding-left: 48px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--divider);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  z-index: 150;
+  overflow: hidden;
+  transform-origin: center;
+  transition: transform 350ms cubic-bezier(0.4, 0, 0.2, 1), left 220ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.toolbox-strip.is-drop-target {
+  background: var(--surface-high);
+  border-bottom-color: var(--toolbox-reg-color, var(--accent));
+}
+.toolbox-reg-select {
+  width: 180px;
+  flex-shrink: 0;
+  background: var(--surface);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 6px 10px;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 12px;
+  cursor: pointer;
+  margin-right: var(--space-2);
+}
+.toolbox-error {
+  color: var(--text-muted);
+  font-size: 13px;
+  flex-shrink: 0;
+  cursor: default;
+  margin-right: var(--space-1);
+}
+.toolbox-gen-list {
+  display: flex;
+  flex-direction: row;
+  gap: var(--space-1);
+  flex: 1;
+  overflow-x: auto;
+}
+.toolbox-gen-item {
+  height: 36px;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  flex-shrink: 0;
+  border-radius: var(--radius);
+  background: transparent;
+  transition: background 150ms ease, opacity 150ms ease;
+}
+.toolbox-gen-item:hover { background: var(--surface-high); }
+.toolbox-drag-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  cursor: grab;
+  user-select: none;
+  background: transparent;
+  outline: none;
+  border: none;
+}
+.toolbox-gen-icon  { flex-shrink: 0; overflow: visible; }
+.toolbox-gen-diamond {
+  fill-opacity: 0.18;
+  transition: fill-opacity 150ms ease;
+}
+.toolbox-gen-item:hover .toolbox-gen-diamond { fill-opacity: 0.28; }
+.toolbox-gen-label {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 11px;
+  color: var(--text-primary);
+  margin-left: 6px;
+  white-space: nowrap;
+}
+.toolbox-skeleton {
+  height: 36px;
+  width: 80px;
+  flex-shrink: 0;
+  border-radius: var(--radius);
+  background: var(--surface-high);
+  opacity: 0.6;
+  border: 1px solid var(--divider);
+}
+
+.gv3-canvas {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+.gv3-empty-hint {
+  position: absolute;
+  top: 50%;
+  left: calc(50% + 120px);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 5;
+}
+.gv3-bg-svg     { position: absolute; top: 0; left: 0; display: block; }
+.gv3-grid-rect  { cursor: default; }
+.gv3-node-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.gv3-node-layer { position: absolute; top: 0; left: 0; transform-origin: 0 0; }
+
+/* ── Generator nodes ── */
+.gv3-node {
+  position: absolute;
+  background: transparent;
+  outline: none;
+  pointer-events: auto;
+  cursor: grab;
+  user-select: none;
+  transition: opacity 150ms ease;
+}
+.gv3-node__svg     { display: block; overflow: visible; }
+.gv3-node__diamond {
+  stroke-opacity: 1;
+  stroke-width: 1.5;
+  filter: none;
+  transition: filter 150ms ease;
+}
+.gv3-node--selected .gv3-node__diamond { stroke-width: 2.5; }
+.gv3-node--isolated .gv3-node__diamond { stroke-dasharray: 6 3; }
+.gv3-node:hover     .gv3-node__diamond { filter: drop-shadow(0 0 6px var(--node-glow)); }
+.gv3-node__tip {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 6px 10px;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* ── Edge connectors ── */
+.gv3-edge__hit  { stroke: transparent; stroke-width: 20; }
+.gv3-edge__line {
+  stroke-width: 1.5;
+  stroke-opacity: 0.6;
+  transition: stroke-opacity 150ms ease, stroke-width 150ms ease;
+}
+.gv3-edge:hover .gv3-edge__line  { stroke-width: 2; stroke-opacity: 1; }
+.gv3-edge__arrow {
+  fill-opacity: 0.6;
+  transition: fill-opacity 150ms ease;
+}
+.gv3-edge:hover .gv3-edge__arrow { fill-opacity: 1; }
+.gv3-edge__label--clickable      { cursor: pointer; }
+.gv3-edge__pill                  { fill: var(--surface); }
+
+.gv3-save-panel {
+  position: fixed;
+  top: 84px;
+  right: 16px;
+  z-index: var(--z-modal);
+  width: 288px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.gv3-save-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--divider);
+}
+.gv3-save-panel__body {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.gv3-save-panel__actions { display: flex; justify-content: flex-end; gap: var(--space-2); }
+.gv3-save-panel__close {
+  appearance: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  font-size: 12px;
+  padding: 0 0 0 var(--space-2);
+  line-height: 1;
+  flex-shrink: 0;
+}
+.gv3-save-panel__list  { max-height: 300px; overflow-y: auto; }
+.gv3-save-panel__empty { padding: 14px; color: var(--text-muted); font-size: 12px; margin: 0; }
+.gv3-save-item {
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.gv3-save-item + .gv3-save-item { border-top: 1px solid var(--divider); }
+.gv3-save-item__info { flex: 1; min-width: 0; }
+.gv3-save-item__date { font-size: 10px; color: var(--text-muted); font-family: var(--font-mono); margin-top: 2px; }
+.gv3-dismiss {
+  appearance: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  font-size: 12px;
+  padding: 0 2px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+/* =============================================================
+   FIELD DRAWER — slide-in field browser panel (Graph-v3)
+   ============================================================= */
+.field-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 400px;
+  height: 100vh;
+  z-index: var(--z-overlay);
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+}
+.field-drawer.is-open {
+  transform: translateX(0);
+  pointer-events: auto;
+}
+.field-drawer__body {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.field-drawer__list {
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* =============================================================
+   VALIDATION PANEL — methodology audit & field validator
+   ============================================================= */
+.vp-wrap { max-width: 860px; margin: 0 auto; }
+
+.stat-value {
+  font: 700 22px/1 var(--font-mono);
+  color: var(--text-primary);
+  margin-bottom: var(--space-1);
+}
+.stat-value--active       { color: var(--status-active); }
+.stat-value--accent       { color: var(--accent); }
+.stat-value--implementing { color: var(--status-implementing); }
+
+.factor-table {
+  width: 100%;
+  font: 400 11px/1.4 var(--font-mono);
+  border-collapse: collapse;
+  margin-top: var(--space-2);
+}
+.factor-table tr + tr        { border-top: 1px solid var(--border); }
+.factor-table td:first-child { padding: 4px 12px 4px 0; color: var(--text-secondary); }
+.factor-table td:last-child  { padding: 4px 0; font-weight: 700; }
+
+.item-row { padding-bottom: var(--space-3); }
+.item-row + .item-row { border-top: 1px solid var(--border); padding-top: var(--space-3); }
+
+.stat-large {
+  font: 700 20px/1 var(--font-mono);
+  color: var(--text-primary);
+  margin-bottom: var(--space-1);
+}
+
+.gauge-svg   { display: block; margin: 0 auto var(--space-2); }
+.gauge-value { font: 700 14px/1 var(--font-mono); text-align: center; margin-bottom: var(--space-1); }
+
+.matrix-table {
+  border-collapse: collapse;
+  font: 400 10px/1.4 var(--font-mono);
+  min-width: 100%;
+}
+.matrix-table thead tr       { border-bottom: 1px solid var(--border); }
+.matrix-table tbody tr       { border-bottom: 1px solid var(--border); }
+.matrix-table th             { padding: 6px 8px; text-align: left; font-weight: 700; color: var(--text-secondary); }
+.matrix-table th:last-child  { text-align: center; }
+.matrix-table td:first-child { padding: 6px 8px; font-weight: 600; }
+.matrix-td         { padding: 6px 8px; text-align: center; color: var(--text-primary); font-weight: 400; }
+.matrix-td--active { color: var(--accent); font-weight: 700; background: rgba(100,100,100,0.1); }
+
+.pct-label    { font: 700 11px/1 var(--font-mono); min-width: 50px; text-align: right; flex-shrink: 0; }
+.coverage-warn { font: 400 10px/1.3 var(--font-sans); color: var(--accent); margin-top: var(--space-2); }
+.error-fields  { margin-top: var(--space-1); font: 400 11px/1.7 var(--font-mono); }
+
+/* End of ObligaI_Extended_Stylesheet.css ===================== */
