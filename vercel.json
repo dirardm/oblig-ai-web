@@ -5,7 +5,7 @@
     { "source": "/trig-functions", "destination": "/trig-functions/", "permanent": true }
   ],
   "rewrites": [
-    { "source": "/probs-in-rust/:path*", "destination": "https://app-theta-silk-80.vercel.app/:path*" },
+    { "source": "/probs-in-rust(/.*)?", "destination": "https://app-theta-silk-80.vercel.app$1" },
     { "source": "/assets/:name-:hash.:ext", "destination": "https://app-theta-silk-80.vercel.app/assets/:name-:hash.:ext" }
   ]
 }
