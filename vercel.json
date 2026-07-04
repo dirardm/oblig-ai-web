@@ -3,10 +3,11 @@
   "redirects": [
     { "source": "/asean-manifest-viewer", "destination": "/asean-manifest-viewer/", "permanent": true },
     { "source": "/probs-in-rust/", "destination": "/probs-in-rust", "permanent": true },
-    { "source": "/trig-functions", "destination": "/trig-functions/", "permanent": true }
+    { "source": "/trig-functions/", "destination": "/trig-functions", "permanent": true }
   ],
   "rewrites": [
     { "source": "/probs-in-rust/:path*", "destination": "https://app-theta-silk-80.vercel.app/:path*" },
+    { "source": "/trig-functions/:path*", "destination": "https://trig-functions-theta.vercel.app/:path*" },
     { "source": "/assets/:name-:hash.:ext", "destination": "https://app-theta-silk-80.vercel.app/assets/:name-:hash.:ext" }
   ]
 }
