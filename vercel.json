@@ -12,6 +12,7 @@
     { "source": "/trig-functions/:path*", "destination": "https://trig-functions-theta.vercel.app/:path*" },
     { "source": "/inverse-trig-functions/:path*", "destination": "https://inverse-trig-functions.vercel.app/:path*" },
     { "source": "/launcher/:path*", "destination": "https://math-applets-launcher.vercel.app/:path*" },
+    { "source": "/prototype/:path*", "destination": "https://obligai.vercel.app/prototype/:path*" },
     { "source": "/assets/:name-:hash.:ext", "destination": "https://app-theta-silk-80.vercel.app/assets/:name-:hash.:ext" }
   ]
 }
